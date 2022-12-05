@@ -93,7 +93,7 @@ class _Request_InformationState extends State<Request_Information> {
         _NFT_NextController2.text = '';
         _NFT_NextController3.text = '';
         _NFT_NextController4.text = '';
-        print("!111111111111111111111111111");
+        //print("!111111111111111111111111111");
       });
     } catch(e){print(e);}
   }

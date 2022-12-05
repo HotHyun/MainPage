@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
 import 'wallet.dart';
 
 class LogInPage extends StatefulWidget{
@@ -9,22 +10,22 @@ class LogInPage extends StatefulWidget{
 
 class POSTECH_Information
 {
-  String? ID;
-  String? Password;
+  String? URL;
 
-  POSTECH_Information(this.ID, this.Password);
+  POSTECH_Information(this.URL);
 }
+
+List<String> URL = [];
+List<String> URL_Split = [];
 
 class _LogInPageState extends State<LogInPage>
 {
   var _NextController1 = TextEditingController();
-  var _NextController2 = TextEditingController();
 
   @override
   void dispose()
   {
     _NextController1.dispose();
-    _NextController2.dispose();
     super.dispose();
   }
 
@@ -32,11 +33,19 @@ class _LogInPageState extends State<LogInPage>
   {
     setState(() {
       FirebaseFirestore.instance.collection('UGRP').add(
-        {'ID' : information.ID, 'Password' : information.Password}
+        {'URL' : information.URL}
       );
       _NextController1.text = '';
-      _NextController2.text = '';
     });
+  }
+
+  void _callAPI(String URL) async {
+    var url = Uri.parse(
+      'http://3.35.47.46/pams/' + URL,
+    );
+    var response = await http.get(url);
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
   }
 
   @override
@@ -123,7 +132,7 @@ class _LogInPageState extends State<LogInPage>
                 ),
               ),
               Container(
-                height: 69 * Factor_Height,
+                height: 93 * Factor_Height,
               ),
               Container(
                 height: 32 * Factor_Height,
@@ -158,7 +167,7 @@ class _LogInPageState extends State<LogInPage>
                           fontFamily: "Spoqa-Regular",
                           color: Color(0xFF818181),
                         ),
-                        hintText: "POVIS ID",
+                        hintText: "URL을 입력해주세요",
                         ),
                         style: TextStyle(
                           fontSize: 14.4 * Factor_Width,
@@ -177,55 +186,7 @@ class _LogInPageState extends State<LogInPage>
                 height: 34 * Factor_Height,
               ),
               Container(
-                height: 32 * Factor_Height,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 54 * Factor_Width,
-                    ),
-                    Container(
-                      height: 32 * Factor_Width,
-                      width: 32 * Factor_Width,
-                      child: Image.asset(
-                        'assets/PassWord.png',
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Container(
-                      width: Factor_Width * 27
-                    ),
-                    Container(
-                      width: 200 * Factor_Width,
-                      child: TextField(
-                        controller: _NextController2,
-                        decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xFFBFBFBF),
-                              )
-                          ),
-                          hintStyle: TextStyle(
-                            fontSize: 14.4 * Factor_Width,
-                            fontFamily: "Spoqa-Regular",
-                            color: Color(0xFF818181),
-                          ),
-                          hintText: "POVIS Password",
-                        ),
-                        style: TextStyle(
-                          fontSize: 14.4 * Factor_Width,
-                          fontFamily: "Spoqa-Regular",
-                          color: Color(0xFF3C3C3C),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: Factor_Width * 62,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                height: 69 * Factor_Height,
+                height: 80 * Factor_Height,
               ),
               Container(
                 height: 53 * Factor_Height,
@@ -234,7 +195,11 @@ class _LogInPageState extends State<LogInPage>
                   child: GestureDetector(
                     onTap:()
                     {
-                      _add_Information(POSTECH_Information(_NextController1.text, _NextController2.text));
+                      URL.add(_NextController1.text);
+                      URL_Split = URL[0].split("=");
+                      URL = URL_Split[1].split("&");
+                      _callAPI(URL[0]);
+                      _add_Information(POSTECH_Information(URL[0]));
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder:

@@ -47,7 +47,7 @@ class EmptyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size(0.0, 0.0);
+  Size get preferredSize => Size(0.0, -28.6);
 }
 
 class _Main_HomePageState extends State<Main_HomePage> {

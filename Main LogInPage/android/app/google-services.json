@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "628557829275",
-    "project_id": "ugrp-firebase",
-    "storage_bucket": "ugrp-firebase.appspot.com"
+    "project_number": "222616429546",
+    "project_id": "ugrp-firebase-ab231",
+    "storage_bucket": "ugrp-firebase-ab231.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:628557829275:android:de233af2f337642a1e623e",
+        "mobilesdk_app_id": "1:222616429546:android:fe1090a8f9a71b5defc893",
         "android_client_info": {
           "package_name": "com.example.untitled2"
         }
       },
       "oauth_client": [
         {
-          "client_id": "628557829275-tst6vh3d2ci8hj3n93nvvnv56addb5g9.apps.googleusercontent.com",
+          "client_id": "222616429546-l56d6fh719fafgdlpf6364a8vlkmpqg2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBC9vXjUd5iiK5luh1Id0DzCib1jyUZcmk"
+          "current_key": "AIzaSyB5g8qilV9XyM_wcW6L-SrTvdO7Dcm3G64"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "628557829275-tst6vh3d2ci8hj3n93nvvnv56addb5g9.apps.googleusercontent.com",
+              "client_id": "222616429546-l56d6fh719fafgdlpf6364a8vlkmpqg2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

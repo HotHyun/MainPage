@@ -47,16 +47,16 @@ List<Heart_Like_Class> _Activity_Name = [
 ];
 
 List<DocumentReference> _Doc_Information = [
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('2wrT7vTK4fhJwtUvQ4Nx'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('BEkkQlqULDd4isTkYxFW'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('BHN60qVGmqRsu8EpLEWh'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('EGe6019r4MfQGUOG2HBx'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('Wyc41Nz2KBomCr5Uo1g7'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('dT1wlBo5XIg3vv07Fhjr'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('iwE3eUxVzHQmqfVKYlyW'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('kSITh132y1f2o50EsGQM'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('lOJg96ThlM6gK1hREDpq'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('peTC2UXIQCouFoQvLZeG'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('Jle6J0dFDc6IPw9dCn1E'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('dCyqppqeJS80oagNo1R7'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('thhOBHNfjyMtq7wi5bfI'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('cB5FvfgHufOyXAsSTEdR'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('T30KSWuZccUTRwlwf0ex'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('Jq3CDZ1suW3MzOqV9UFX'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('Tj8cT3tZR23AlO5MU3m3'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('T0fVgwi27SewNXJF8tvA'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('h9boHngsnRf9CGbT6uZs'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('NTBLsFAeODa1If9zI56j'),
 ];
 
 double? value_height;
@@ -219,7 +219,6 @@ class _Home_PageState extends State<Home_Page> {
         }
       FirebaseFirestore.instance.collection('Activity_Collection').doc(doc.id).update(
         {
-          'Heart_Activity_Name' : heart_like_class.Heart_Activity_Name,
           'Like_Num' : heart_like_class.Like_Num,
           'is_True' : heart_like_class.is_True,
         }
@@ -228,15 +227,17 @@ class _Home_PageState extends State<Home_Page> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      scrollDirection: Axis.vertical,
-      children: <Widget>[
-        _Build_First(),
-        _Build_Second(),
-        _Build_Third(),
-        _Build_Fourth(),
-        _Build_Fifth(),
-      ],
+    return Scaffold(
+      body: ListView(
+        scrollDirection: Axis.vertical,
+        children: <Widget>[
+          _Build_First(),
+          _Build_Second(),
+          _Build_Third(),
+          _Build_Fourth(),
+          _Build_Fifth(),
+        ],
+      ),
     );
   }
 

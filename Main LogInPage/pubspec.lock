@@ -230,6 +230,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  flutter_neumorphic:
+    dependency: "direct main"
+    description:
+      name: flutter_neumorphic
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -255,7 +262,7 @@ packages:
     source: hosted
     version: "3.0.1"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -443,6 +450,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.6.2"
+  polygon_clipper:
+    dependency: "direct main"
+    description:
+      name: polygon_clipper
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   process:
     dependency: transitive
     description:
