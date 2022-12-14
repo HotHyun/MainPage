@@ -1,13 +1,50 @@
 import 'package:flutter/material.dart';
 import 'letsgo.dart';
-import 'yourinfo.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class whoareyou extends StatefulWidget {
   @override
   _whoareyouState createState() => _whoareyouState();
 }
 
+class user_Information {
+  String? Nickname;
+
+  user_Information(this.Nickname);
+}
+
 class _whoareyouState extends State<whoareyou> {
+
+  final NicknameController = TextEditingController();
+
+  static final storage = FlutterSecureStorage();
+
+  String? userInfo = '';
+  String? User_Name = '';
+
+  void _add_Information(user_Information information) async
+  {
+    userInfo = await storage.read(key: "login");
+    User_Name = await storage.read(key: "NickName");
+    await storage.write(
+      key: "NickName",
+      value: "NickName " + information.Nickname!,
+    );
+    setState(() {
+      FirebaseFirestore.instance.collection('users').doc(userInfo!.split(" ")[1]).collection('Profile').add(
+          {'Nickname' : information.Nickname}
+      );
+      NicknameController.text = '';
+    });
+  }
+
+  @override
+  void dispose() {
+    NicknameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -16,8 +53,6 @@ class _whoareyouState extends State<whoareyou> {
     final deviceHeight = MediaQuery.of(context).size.height;
     final standardDeviceHeight = 812;
     final Factor_Height = deviceHeight / standardDeviceHeight;
-
-    bool _issetted = false; // 프로필이 설정되었는지 확인하는 변수
 
     return GestureDetector(
       onTap: () {
@@ -100,47 +135,13 @@ class _whoareyouState extends State<whoareyou> {
                 height: 54 * Factor_Height,
               ),
               Container(
-                // '자신만의 프로필 설정하러 가기' 버튼
                 height: 53 * Factor_Height,
-                child: Container(
-                  width: 300 * Factor_Width,
-                  child: GestureDetector(
-                    onTap: () {
-
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => yourinfo()),
-                      );
-
-                      _issetted = true; // 프로필이 설정되었음을 알려줌
-                    },
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Opacity(
-                            opacity: 0.73,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color(0xFFCD0051),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              width: 300 * Factor_Width,
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: Text(
-                            '자신만의 프로필 설정하러 가기',
-                            style: TextStyle(
-                              fontSize: 17 * Factor_Width,
-                              fontFamily: 'Spoqa-Bold',
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                width: 300 * Factor_Width,
+                child: TextField(
+                  controller: NicknameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: '닉네임',
                   ),
                 ),
               ),
@@ -151,14 +152,8 @@ class _whoareyouState extends State<whoareyou> {
                 // '앗, 나중에 할게요' 텍스트
                 height: 21 * Factor_Height,
               ),
-              GestureDetector(
-                onTap: ()
-                {
-                  print(_issetted);
-                },
-                child: Container(
-                  height: 92 * Factor_Height,
-                ),
+              Container(
+                height: 92 * Factor_Height,
               ),
               Container(
                 // '이제, 다 왔어요!' 버튼
@@ -168,14 +163,13 @@ class _whoareyouState extends State<whoareyou> {
                   child: GestureDetector(
                     onTap: () {
                       // 다음 페이지로 이동하는 부분 navigator 구현
-                      !_issetted // 삼항 연산자로 issetted가 false일 경우 '이제, 다 왔어요'버튼을 눌러도 반응을 하지 않고, true인 경우에만 다음 페이지로 넘어가는 push 기능을 하게끔 구현함.
-                          ? null
-                          : Navigator.push(
+                      _add_Information(user_Information(NicknameController.text));
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  letsgo())); // letsgo 로 넘어감
-                      _issetted = false;
+                                  letsgo()));
+                      // letsgo 로 넘어감
                     },
                     child: Stack(
                       children: [

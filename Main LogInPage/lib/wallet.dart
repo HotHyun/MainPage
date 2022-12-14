@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'whoareyou.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class wallet extends StatefulWidget {
   @override
@@ -21,6 +22,25 @@ class _walletState extends State<wallet> {
           ]));
 
   var _session, _uri, _signature;
+
+  String? userInfo = "";
+
+  static final storage = new FlutterSecureStorage();
+
+  @override
+  void initState()
+  {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
+    });
+  }
+
+  _asyncMethod() async
+  {
+    userInfo = await storage.read(key: "MetaMask");
+    print(userInfo);
+  }
 
   loginUsingMetamask(BuildContext context) async {
     if (!connector.connected) {
@@ -271,8 +291,11 @@ class _walletState extends State<wallet> {
                   height: 53 * Factor_Height,
                   width: 300 * Factor_Width,
                   child: GestureDetector(
-                    onTap: () {
-
+                    onTap: () async {
+                      await storage.write(
+                        key: "MetaMask",
+                        value: "ID " + _session.accounts[0],
+                      );
                       _session = true; //디버깅용, 추후 삭제 바람
 
                       if(_session!=null)

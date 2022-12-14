@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'wallet.dart';
+import 'dart:async';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'Main_HomePage.dart';
+
+import 'LogOutPage.dart';
 
 class LogInPage extends StatefulWidget{
   @override
@@ -17,10 +24,30 @@ class POSTECH_Information
 
 List<String> URL = [];
 List<String> URL_Split = [];
+List<int> check = [0];
 
 class _LogInPageState extends State<LogInPage>
 {
   var _NextController1 = TextEditingController();
+
+  String? userInfo = "";
+
+  static final storage = new FlutterSecureStorage();
+
+  @override
+  void initState()
+  {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
+    });
+  }
+
+  _asyncMethod() async
+  {
+    userInfo = await storage.read(key: "login");
+    print(userInfo);
+  }
 
   @override
   void dispose()
@@ -39,13 +66,29 @@ class _LogInPageState extends State<LogInPage>
     });
   }
 
-  void _callAPI(String URL) async {
+  Future _callAPI(String URL) async {
     var url = Uri.parse(
       'http://3.35.47.46/pams/' + URL,
     );
     var response = await http.get(url);
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
+    if(response.body == '{}')
+      {
+        _NextController1.text = "";
+      }
+    else
+      {
+        await storage.write(
+          key: "login",
+          value: "URL " + URL,
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder:
+              (context) => wallet()),
+        );
+      }
   }
 
   @override
@@ -195,16 +238,23 @@ class _LogInPageState extends State<LogInPage>
                   child: GestureDetector(
                     onTap:()
                     {
+
+                      URL.clear();
+                      URL_Split.clear();
                       URL.add(_NextController1.text);
                       URL_Split = URL[0].split("=");
                       URL = URL_Split[1].split("&");
+                      _NextController1.text = '';
                       _callAPI(URL[0]);
                       _add_Information(POSTECH_Information(URL[0]));
-                      Navigator.push(
+                      URL.clear();
+                      URL_Split.clear();
+
+                      /*Navigator.push(
                         context,
                         MaterialPageRoute(builder:
                             (context) => wallet()),
-                      );
+                      ); // 일단 넣어놓기 서버 안열리면 쓰게*/
                     },
                     child: Stack(
                       children: [

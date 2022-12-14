@@ -6,6 +6,11 @@ import 'Request_Page.dart';
 import 'Request_Information.dart';
 import 'Community_Page.dart';
 import 'Profile_Page.dart';
+import 'package:flutter/services.dart';
+
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'LogOutPage.dart';
 
 
 class MyApp extends StatelessWidget
@@ -43,14 +48,30 @@ class Main_HomePage extends StatefulWidget {
 class EmptyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return AppBar(backgroundColor: Colors.white,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: const <Color>[
+              Color.fromRGBO(205, 0, 81, 0.6),
+              Color.fromRGBO(205, 0, 81, 0.8),
+            ],
+          ),
+        ),
+      ),
+      elevation: 0,
+    );
   }
 
   @override
-  Size get preferredSize => Size(0.0, -28.6);
+  Size get preferredSize => Size(0.0, 0.0);
 }
 
 class _Main_HomePageState extends State<Main_HomePage> {
+
+  static final storage = FlutterSecureStorage();
 
   var _index = 0;
   var _pages = [
@@ -69,8 +90,25 @@ class _Main_HomePageState extends State<Main_HomePage> {
         elevation: 0.0,
         leading: IconButton(
           icon: Icon(Icons.menu),
-          onPressed: () {
+          onPressed: () async {
+            String? userInfo = '';
+            String? ID = '';
+            userInfo = await storage.read(key: "login");
+            ID = await storage.read(key: "MetaMask");
+            print(userInfo);
+            print(ID);
 
+            if(userInfo != null)
+            {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder:
+                    (context) => LogOutPage(
+                  URL: userInfo!.split(" ")[1],
+                      ID: ID!.split(" ")[1],
+                )),
+              );
+            }
           },
         ),
         flexibleSpace: Container(
@@ -110,7 +148,7 @@ class _Main_HomePageState extends State<Main_HomePage> {
         ],
         centerTitle: true,
       )
-      : EmptyAppBar(),
+          : EmptyAppBar(),
       body: _pages[_index],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

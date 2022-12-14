@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'LogInPage.dart';
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'Main_HomePage.dart';
+import 'wallet.dart';
+import 'whoareyou.dart';
 
 class FirstPage extends StatefulWidget{
   @override
@@ -9,17 +14,54 @@ class FirstPage extends StatefulWidget{
 
 class _FirstPageState extends State<FirstPage>
 {
+  String? userInfo = '';
+  String? ID = '';
+  String? NickName = '';
+  String? is_Finish = '';
+
+  static final storage = new FlutterSecureStorage();
+
   @override
   void initState()
   {
     super.initState();
-    Timer(Duration(seconds: 3), (){
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder:
-      (context) => LogInPage()));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
     });
   }
+
+  _asyncMethod() async
+  {
+    userInfo = await storage.read(key: "login");
+    ID = await storage.read(key: "MetaMask");
+    NickName = await storage.read(key: "NickName");
+    is_Finish = await storage.read(key: "is_Finish");
+    print(userInfo);
+    print(ID);
+    print(NickName);
+    print(is_Finish);
+
+    if((userInfo != null) && (ID != null) && (NickName != null) && (is_Finish != null))
+    {
+      Timer(Duration(seconds: 2), (){
+        Navigator.pushReplacement(
+            context,
+            CupertinoPageRoute(builder:
+                (context) => Main_HomePage()));
+      });
+    }
+    else
+      {
+        Timer(Duration(seconds: 2), (){
+
+            Navigator.pushReplacement(
+                context,
+                CupertinoPageRoute(builder:
+                    (context) => LogInPage()));
+        });
+      }
+  }
+
   @override
   Widget build(BuildContext context)
   {

@@ -1,10 +1,40 @@
 {
   "project_info": {
     "project_number": "222616429546",
+    "firebase_url": "https://ugrp-firebase-ab231-default-rtdb.firebaseio.com",
     "project_id": "ugrp-firebase-ab231",
     "storage_bucket": "ugrp-firebase-ab231.appspot.com"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222616429546:android:3abcf40b879e552cefc893",
+        "android_client_info": {
+          "package_name": "com.example.tessproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222616429546-l56d6fh719fafgdlpf6364a8vlkmpqg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5g8qilV9XyM_wcW6L-SrTvdO7Dcm3G64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "222616429546-l56d6fh719fafgdlpf6364a8vlkmpqg2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:222616429546:android:fe1090a8f9a71b5defc893",

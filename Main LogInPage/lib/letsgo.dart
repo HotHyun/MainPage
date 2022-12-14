@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Main_HomePage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class letsgo extends StatefulWidget{
   @override
@@ -8,6 +9,25 @@ class letsgo extends StatefulWidget{
 
 class _letsgoState extends State<letsgo>
 {
+  String? userInfo = "";
+
+  static final storage = new FlutterSecureStorage();
+
+  @override
+  void initState()
+  {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _asyncMethod();
+    });
+  }
+
+  _asyncMethod() async
+  {
+    userInfo = await storage.read(key: "is_Finish");
+    print(userInfo);
+  }
+
   @override
   Widget build(BuildContext context)
   {
@@ -126,8 +146,12 @@ class _letsgoState extends State<letsgo>
                 child: Container(
                   width: 300 * Factor_Width,
                   child: GestureDetector(
-                    onTap:()
+                    onTap:() async
                     {
+                      await storage.write(
+                        key: "is_Finish",
+                        value: "is_Finish " + "true",
+                      );
 
                       Navigator.push(
                        context,
