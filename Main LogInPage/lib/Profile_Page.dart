@@ -65,11 +65,11 @@ class _Profile_PageState extends State<Profile_Page>
     Map<String, dynamic> data = docsnapshot.data() as Map<String, dynamic>;
 
 
-    username = data['name'] ?? null;
-    grade = data['grade'] ?? null;
-    id = data['id'] ?? null;
-    major = data['major'] ?? null;
-    state = data['state'] ?? null;
+    username = data['이름'] ?? null;
+    grade = data['학년'] ?? null;
+    //id = data['id'] ?? null;
+    major = data['학과'] ?? null;
+    state = data['학적'] ?? null;
     //NickName = profile_data['NickName'] ?? null;
     switch(major){
 
@@ -127,7 +127,7 @@ class _Profile_PageState extends State<Profile_Page>
     vnamelist.clear();
     enamelist.clear();
 
-    var schoolactlist = await FirebaseFirestore.instance.collection('users').doc(URL).collection('schoolAct_list').get();
+    var schoolactlist = await FirebaseFirestore.instance.collection('users').doc(URL).collection('schoolAct').get();
 
     for (int i = 0; i < schoolactlist.docs.length; i++) {
       Map<String, dynamic> temp = schoolactlist.docs[i].data();
@@ -138,13 +138,13 @@ class _Profile_PageState extends State<Profile_Page>
       schoolact.add(act);
     }
 
-    var clubactlist = await FirebaseFirestore.instance.collection('users').doc(URL).collection('clubAct_list').get();
+    var clubactlist = await FirebaseFirestore.instance.collection('users').doc(URL).collection('clubAct').get();
 
     for (int i = 0; i < clubactlist.docs.length; i++) {
       Map<String, dynamic> temp = clubactlist.docs[i].data();
       Map<String, dynamic> act = {};
-      act.addAll({'수상': temp['수상'], '운영기간': temp['운영기간'],'운영부서': temp['운영부서'],'활동명': temp['활동명'], '활동유형': temp['활동유형']});
-      String name = temp['활동명'];
+      act.addAll({'구분': temp['구분'], '단체명': temp['단체명'],'직책': temp['직책'],'활동기간': temp['활동기간']});
+      String name = temp['단체명'];
       cnamelist.add(name);
       clubact.add(act);
     }
@@ -154,30 +154,30 @@ class _Profile_PageState extends State<Profile_Page>
     for (int i = 0; i < volunteerlist.docs.length; i++) {
       Map<String, dynamic> temp = volunteerlist.docs[i].data();
       Map<String, dynamic> act = {};
-      act.addAll({'수상': temp['수상'], '운영기간': temp['운영기간'],'운영부서': temp['운영부서'],'활동명': temp['활동명'], '활동유형': temp['활동유형']});
-      String name = temp['활동명'];
+      act.addAll({'구분': temp['구분'], '봉사기간': temp['봉사기간'],'봉사시간': temp['봉사시간'],'봉사장소': temp['봉사장소'], '봉사활동명': temp['봉사활동명'], '확인기관' : temp['확인기관']});
+      String name = temp['봉사활동명'];
       vnamelist.add(name);
       volunteer.add(act);
     }
 
-    var extraactlist = await FirebaseFirestore.instance.collection('users').doc(URL).collection('extraAct_list').get();
+    var extraactlist = await FirebaseFirestore.instance.collection('users').doc(URL).collection('extraAct').get();
 
     for (int i = 0; i < extraactlist.docs.length; i++) {
       Map<String, dynamic> temp = extraactlist.docs[i].data();
       Map<String, dynamic> act = {};
       act.addAll({
-        '수상': temp['수상'],
-        '운영기간': temp['운영기간'],
-        '운영부서': temp['운영부서'],
-        '활동명': temp['활동명'],
-        '활동유형': temp['활동유형']
+        '대회기관': temp['대회기관'],
+        '대회명': temp['대회명'],
+        '수상실적': temp['수상실적'],
+        '주최기관': temp['주최기관'],
       });
-      String name = temp['활동명'];
+      String name = temp['대회명'];
       enamelist.add(name);
       extraact.add(act);
     }
 
     print(username);
+    print(URL);
     return extraact;
 
 
@@ -219,7 +219,7 @@ class _Profile_PageState extends State<Profile_Page>
 
     return Scaffold(
       body: FutureBuilder<dynamic>(
-        future: future_profile,
+        future: future_activity,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if(snapshot.hasData)
           {
@@ -495,7 +495,7 @@ class _Profile_PageState extends State<Profile_Page>
     final standardDeviceHeight = 812;
     final Factor_Height = deviceHeight / standardDeviceHeight;
 
-    String? ID = id![2].toString() + id![3].toString();
+    String? ID = URL![2].toString() + URL![3].toString();
 
     return Column(
 
@@ -570,159 +570,163 @@ class _Profile_PageState extends State<Profile_Page>
           height: 3 * Factor_Height,
         ),
 
-        Row(
-          children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
 
-            Container(
-                width: 18 * Factor_Width
-            ),
+              Container(
+                  width: 18 * Factor_Width
+              ),
 
-            Column(
-              //교내활동 이력
+              Column(
+                //교내활동 이력
 
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 15 * Factor_Height,
-                ),
-                Container(
-                  height: 22 * Factor_Height,
-                  child: Text(
-                    '교내활동 이력',
-                    style: TextStyle(
-                        fontFamily: 'Spoqa-Bold',
-                        fontSize: 18 * Factor_Height),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 15 * Factor_Height,
                   ),
-                ),
-                Container(
-                  height: 8 * Factor_Height,
-                ),
-                for (var i in snamelist)
                   Container(
                     height: 22 * Factor_Height,
                     child: Text(
-                      i,
+                      '교내활동 이력',
+                      style: TextStyle(
+                          fontFamily: 'Spoqa-Bold',
+                          fontSize: 18 * Factor_Height),
+                    ),
+                  ),
+                  Container(
+                    height: 8 * Factor_Height,
+                  ),
+                  for (var i in snamelist)
+                    Container(
+                      height: 22 * Factor_Height,
+                      child: Text(
+                        i,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Spoqa-Medium',
+                          fontSize: 16 * Factor_Height,
+                          height: 1.2,),
+                      ),
+                    ),
+                  if (snamelist.length == 0)
+                    Text(
+                      '교내활동 이력이 없습니다.',
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'Spoqa-Medium',
                         fontSize: 16 * Factor_Height,
                         height: 1.2,),
                     ),
-                  ),
-                if (snamelist.length == 0)
-                  Text(
-                    '교내활동 이력이 없습니다.',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Spoqa-Medium',
-                      fontSize: 16 * Factor_Height,
-                      height: 1.2,),
-                  ),
-                Container(height: 15 * Factor_Height),
-                Container(
-                  height: 22 * Factor_Height,
-                  child: Text(
-                    '학생단체 활동 이력 ',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Spoqa-Bold',
-                        fontSize: 18 * Factor_Height),
-                  ),
-                ),
-                Container(
-                  height: 8 * Factor_Height,
-                ),
-                for (var i in cnamelist)
+                  Container(height: 15 * Factor_Height),
                   Container(
                     height: 22 * Factor_Height,
                     child: Text(
-                      i,
+                      '학생단체 활동 이력 ',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Spoqa-Bold',
+                          fontSize: 18 * Factor_Height),
+                    ),
+                  ),
+                  Container(
+                    height: 8 * Factor_Height,
+                  ),
+                  for (var i in cnamelist)
+                    Container(
+                      height: 22 * Factor_Height,
+                      child: Text(
+                        i,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Spoqa-Medium',
+                            fontSize: 16 * Factor_Height),
+                      ),
+                    ),
+                  if (cnamelist.length == 0)
+                    Text(
+                      '학생단체 활동 이력이 없습니다.',
                       style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Spoqa-Medium',
                           fontSize: 16 * Factor_Height),
                     ),
+                  Container(
+                    height: 15 * Factor_Height,
                   ),
-                if (cnamelist.length == 0)
-                  Text(
-                    '학생단체 활동 이력이 없습니다.',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Spoqa-Medium',
-                        fontSize: 16 * Factor_Height),
-                  ),
-                Container(
-                  height: 15 * Factor_Height,
-                ),
-                Container(
-                  height: 22 * Factor_Height,
-                  child: Text(
-                    '봉사활동 이력',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Spoqa-Bold',
-                        fontSize: 18 * Factor_Height),
-                  ),
-                ),
-                Container(
-                  height: 8 * Factor_Height,
-                ),
-                for (var i in vnamelist)
                   Container(
                     height: 22 * Factor_Height,
                     child: Text(
-                      i,
+                      '봉사활동 이력',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Spoqa-Bold',
+                          fontSize: 18 * Factor_Height),
+                    ),
+                  ),
+                  Container(
+                    height: 8 * Factor_Height,
+                  ),
+                  for (var i in vnamelist)
+                    Container(
+                      height: 22 * Factor_Height,
+                      child: Text(
+                        i,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Spoqa-Medium',
+                            fontSize: 16 * Factor_Height),
+                      ),
+                    ),
+                  if (vnamelist.length == 0)
+                    Text(
+                      '봉사활동 이력이 없습니다.',
                       style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Spoqa-Medium',
                           fontSize: 16 * Factor_Height),
                     ),
-                  ),
-                if (vnamelist.length == 0)
-                  Text(
-                    '봉사활동 이력이 없습니다.',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Spoqa-Medium',
-                        fontSize: 16 * Factor_Height),
-                  ),
-                Container(height: 15 * Factor_Height),
-                Container(
-                  height: 22 * Factor_Height,
-                  child: Text(
-                    '대외활동 이력',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Spoqa-Bold',
-                        fontSize: 18 * Factor_Height),
-                  ),
-                ),
-                Container(
-                  height: 8 * Factor_Height,
-                ),
-                for (var i in enamelist)
+                  Container(height: 15 * Factor_Height),
                   Container(
                     height: 22 * Factor_Height,
                     child: Text(
-                      i,
+                      '대외활동 이력',
                       style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Spoqa-Medium',
-                        fontSize: 16 * Factor_Height,
-                        height: 1.2,),
+                          color: Colors.black,
+                          fontFamily: 'Spoqa-Bold',
+                          fontSize: 18 * Factor_Height),
                     ),
                   ),
-                if (enamelist.length == 0)
-                  Text(
-                    '대외활동 이력이 없습니다.',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Spoqa-Medium',
-                        fontSize: 16 * Factor_Height),
+                  Container(
+                    height: 8 * Factor_Height,
                   ),
-              ],
-            ),
-          ],
+                  for (var i in enamelist)
+                    Container(
+                      height: 22 * Factor_Height,
+                      child: Text(
+                        i,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Spoqa-Medium',
+                          fontSize: 16 * Factor_Height,
+                          height: 1.2,),
+                      ),
+                    ),
+                  if (enamelist.length == 0)
+                    Text(
+                      '대외활동 이력이 없습니다.',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Spoqa-Medium',
+                          fontSize: 16 * Factor_Height),
+                    ),
+                ],
+              ),
+              Container(width: 18 * Factor_Width),
+            ],
+          ),
         ),
       ],
     );

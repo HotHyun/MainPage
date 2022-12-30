@@ -23,7 +23,7 @@ class POSTECH_Information
 }
 
 List<String> URL = [];
-List<String> URL_Split = [];
+//List<String> URL_Split = [];
 List<int> check = [0];
 
 class _LogInPageState extends State<LogInPage>
@@ -67,28 +67,21 @@ class _LogInPageState extends State<LogInPage>
   }
 
   Future _callAPI(String URL) async {
-    var url = Uri.parse(
+    /*var url = Uri.parse(
       'http://3.35.47.46/pams/' + URL,
     );
     var response = await http.get(url);
     print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-    if(response.body == '{}')
-      {
-        _NextController1.text = "";
-      }
-    else
-      {
-        await storage.write(
-          key: "login",
-          value: "URL " + URL,
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder:
-              (context) => wallet()),
-        );
-      }
+    print('Response body: ${response.body}');*/
+      await storage.write(
+        key: "login",
+        value: "URL " + URL,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder:
+            (context) => wallet()),
+      );
   }
 
   @override
@@ -151,7 +144,7 @@ class _LogInPageState extends State<LogInPage>
                   children: [
                     Expanded(
                       child: Text(
-                        '본인 확인, 계정 생성을 위해 POVIS',
+                        '본인 확인, 계정 생성을 위해',
                         style: TextStyle(
                           fontSize: 18 * Factor_Height,
                           fontFamily: 'Spoqa-Medium',
@@ -162,7 +155,7 @@ class _LogInPageState extends State<LogInPage>
                     ),
                     Expanded(
                       child: Text(
-                        'ID와 Password를 작성해주세요!',
+                        '학번을 입력해주세요 ! (Ex. 20231234)',
                         style: TextStyle(
                           fontSize: 18 * Factor_Height,
                           fontFamily: 'Spoqa-Medium',
@@ -210,7 +203,7 @@ class _LogInPageState extends State<LogInPage>
                           fontFamily: "Spoqa-Regular",
                           color: Color(0xFF818181),
                         ),
-                        hintText: "URL을 입력해주세요",
+                        hintText: "학번을 입력해주세요",
                         ),
                         style: TextStyle(
                           fontSize: 14.4 * Factor_Width,
@@ -240,15 +233,13 @@ class _LogInPageState extends State<LogInPage>
                     {
 
                       URL.clear();
-                      URL_Split.clear();
+                      //URL_Split.clear();
                       URL.add(_NextController1.text);
-                      URL_Split = URL[0].split("=");
-                      URL = URL_Split[1].split("&");
                       _NextController1.text = '';
                       _callAPI(URL[0]);
-                      _add_Information(POSTECH_Information(URL[0]));
+                      //_add_Information(POSTECH_Information(URL[0]));
                       URL.clear();
-                      URL_Split.clear();
+                      //URL_Split.clear();
 
                       /*Navigator.push(
                         context,

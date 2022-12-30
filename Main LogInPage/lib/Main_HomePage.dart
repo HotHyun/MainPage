@@ -4,7 +4,6 @@ import 'Home_Page.dart';
 import 'Search_Page.dart';
 import 'Request_Page.dart';
 import 'Request_Information.dart';
-import 'Community_Page.dart';
 import 'Profile_Page.dart';
 import 'package:flutter/services.dart';
 
@@ -46,23 +45,33 @@ class Main_HomePage extends StatefulWidget {
 }
 
 class EmptyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  int? num;
+  EmptyAppBar({this.num});
+
   @override
   Widget build(BuildContext context) {
-    return AppBar(backgroundColor: Colors.white,
-      flexibleSpace: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: const <Color>[
-              Color.fromRGBO(205, 0, 81, 0.6),
-              Color.fromRGBO(205, 0, 81, 0.8),
-            ],
+    if(num == 3)
+    {
+      return AppBar(backgroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: const <Color>[
+                Color.fromRGBO(205, 0, 81, 0.6),
+                Color.fromRGBO(205, 0, 81, 0.8),
+              ],
+            ),
           ),
         ),
-      ),
-      elevation: 0,
-    );
+        elevation: 0,
+      );
+    }
+    else
+      {
+        return AppBar(elevation: 0, backgroundColor: Colors.transparent,);
+      }
   }
 
   @override
@@ -78,14 +87,13 @@ class _Main_HomePageState extends State<Main_HomePage> {
     Home_Page(),
     Search_Page(),
     Request_Information(),
-    Community_Page(),
     Profile_Page(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: !(_index == 4) ? AppBar(
+      appBar: (_index != 1 && _index != 3) ? AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
         leading: IconButton(
@@ -130,25 +138,9 @@ class _Main_HomePageState extends State<Main_HomePage> {
             fontFamily: 'Spoqa-Medium',
           ),
         ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              MyApp.themeNotifier.value =
-              MyApp.themeNotifier.value == ThemeMode.light
-                  ? ThemeMode.dark
-                  : ThemeMode.light;
-            },
-            icon: Icon(
-              MyApp.themeNotifier.value == ThemeMode.light
-                  ? Icons.dark_mode
-                  : Icons.light_mode,
-              color: Colors.white,
-            ),
-          ),
-        ],
         centerTitle: true,
       )
-          : EmptyAppBar(),
+          : EmptyAppBar(num: _index),
       body: _pages[_index],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -192,10 +184,6 @@ class _Main_HomePageState extends State<Main_HomePage> {
           BottomNavigationBarItem(
             label: '요청',
             icon: Icon(Icons.add_circle),
-          ),
-          BottomNavigationBarItem(
-            label: '커뮤니티',
-            icon: Icon(Icons.groups),
           ),
           BottomNavigationBarItem(
             label: '프로필',
