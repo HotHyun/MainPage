@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_indicator/carousel_indicator.dart';
+import 'package:flutter/cupertino.dart';
+import 'infolist.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 
@@ -469,7 +471,10 @@ class _Home_PageState extends State<Home_Page> {
                   (
                   child: Image.asset('assets/Home_Page_Arrow.png'),
                   onTap: (){
-
+                    Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute(builder:
+                            (context) => infolisttabbar()));
                   },
                 ),
               ),
