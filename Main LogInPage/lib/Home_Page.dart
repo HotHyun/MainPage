@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'infolist.dart';
+import 'actinfo.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 
@@ -17,7 +18,8 @@ class Build_First_Class
 class Build_Second_Class
 {
   Image? ImagePath;
-  Build_Second_Class(this.ImagePath);
+  String? path;
+  Build_Second_Class(this.ImagePath, this.path);
 }
 
 class Build_Fifth_Class
@@ -90,9 +92,9 @@ List<Build_First_Class> First_List = [
             child: Text(
               '활동 열심히 참여하셨나요?',
               style: TextStyle(
-                fontFamily: 'Spoqa-Regular',
-                fontSize: 15 * value_height!,
-                color: Colors.white
+                  fontFamily: 'Spoqa-Medium',
+                  fontSize: 15 * value_height!,
+                  color: Colors.white
               ),
             ),
           ),
@@ -111,39 +113,39 @@ List<Build_First_Class> First_List = [
     ),
   ),
   Build_First_Class(
-    Image.asset(
-      'assets/Second_second.png',
-      height: 74 * value_width!,
-      width: 79 * value_width!,
-    ),
-    Container(
-      height: 38 * value_height!,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Text(
-              '특별한 프로필을 위한',
-              style: TextStyle(
-                fontFamily: 'Spoqa-Regular',
-                fontSize: 15 * value_height!,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              '이벤트 NFT 선물 대기 중!',
-              style: TextStyle(
-                fontFamily: 'Spoqa-Bold',
-                fontSize: 15 * value_height!,
-                color: Color(0xFFFFF967),
-              ),
-            ),
-          ),
-        ],
+      Image.asset(
+        'assets/Second_second.png',
+        height: 74 * value_width!,
+        width: 79 * value_width!,
       ),
-    )
+      Container(
+        height: 38 * value_height!,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                '특별한 프로필을 위한',
+                style: TextStyle(
+                  fontFamily: 'Spoqa-Medium',
+                  fontSize: 15 * value_height!,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                '이벤트 NFT 선물 대기 중!',
+                style: TextStyle(
+                  fontFamily: 'Spoqa-Bold',
+                  fontSize: 15 * value_height!,
+                  color: Color(0xFFFFF967),
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
   ),
   Build_First_Class(
     Image.asset(
@@ -160,7 +162,7 @@ List<Build_First_Class> First_List = [
             child: Text(
               '내 PAM 점수 몇 점?',
               style: TextStyle(
-                fontFamily: 'Spoqa-Regular',
+                fontFamily: 'Spoqa-Medium',
                 fontSize: 15 * value_height!,
                 color: Colors.white,
               ),
@@ -183,11 +185,11 @@ List<Build_First_Class> First_List = [
 ];
 
 List<Build_Second_Class> Second_List = [
-  Build_Second_Class(Image.asset('assets/Second_Imagepath_1.png')),
-  Build_Second_Class(Image.asset('assets/Second_Imagepath_2.png')),
-  Build_Second_Class(Image.asset('assets/Second_Imagepath_3.png')),
-  Build_Second_Class(Image.asset('assets/Second_Imagepath_4.png')),
-  Build_Second_Class(Image.asset('assets/Second_Imagepath_5.png')),
+  Build_Second_Class(Image.asset('assets/Second_Imagepath_1.png'), 'assets/Second_Imagepath_1.png'),
+  Build_Second_Class(Image.asset('assets/Second_Imagepath_2.png'), 'assets/Second_Imagepath_2.png'),
+  Build_Second_Class(Image.asset('assets/Second_Imagepath_3.png'), 'assets/Second_Imagepath_3.png'),
+  Build_Second_Class(Image.asset('assets/Second_Imagepath_4.png'), 'assets/Second_Imagepath_4.png'),
+  Build_Second_Class(Image.asset('assets/Second_Imagepath_5.png'), 'assets/Second_Imagepath_5.png'),
 ];
 
 List<Build_Fifth_Class> Fifth_List = [
@@ -209,22 +211,22 @@ class _Home_PageState extends State<Home_Page> {
 
   void _add_Heart_Num(Heart_Like_Class heart_like_class, DocumentReference doc)
   {
-      if(heart_like_class.is_True == true)
-        {
-          heart_like_class.Like_Num -= 1;
-          heart_like_class.is_True = false;
-        }
-      else
-        {
-          heart_like_class.Like_Num += 1;
-          heart_like_class.is_True = true;
-        }
-      FirebaseFirestore.instance.collection('Activity_Collection').doc(doc.id).update(
+    if(heart_like_class.is_True == true)
+    {
+      heart_like_class.Like_Num -= 1;
+      heart_like_class.is_True = false;
+    }
+    else
+    {
+      heart_like_class.Like_Num += 1;
+      heart_like_class.is_True = true;
+    }
+    FirebaseFirestore.instance.collection('Activity_Collection').doc(doc.id).update(
         {
           'Like_Num' : heart_like_class.Like_Num,
           'is_True' : heart_like_class.is_True,
         }
-      );
+    );
   }
 
   @override
@@ -261,20 +263,20 @@ class _Home_PageState extends State<Home_Page> {
           width: MediaQuery.of(context).size.width,
         ),
         Container(
-        height: 120 * Factor_Height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: const <Color>[
-            Color.fromRGBO(205, 0, 81, 0.6),
-            Color.fromRGBO(205, 0, 81, 0.8),
-          ],
-        ),
-        ),
-        child: CarouselSlider(
-          options: CarouselOptions(
+          height: 120 * Factor_Height,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: const <Color>[
+                Color.fromRGBO(205, 0, 81, 0.6),
+                Color.fromRGBO(205, 0, 81, 0.8),
+              ],
+            ),
+          ),
+          child: CarouselSlider(
+            options: CarouselOptions(
               height: 140 * Factor_Height,
               enlargeCenterPage: true,
               viewportFraction: 1.0,
@@ -288,52 +290,52 @@ class _Home_PageState extends State<Home_Page> {
               },
             ),
 
-              items: _First_index.map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 24.0 * Factor_Width),
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(height: 16 * Factor_Height),
-                                  First_List[i].Title!,
-                                  Container(height: 15 * Factor_Height),
-                                  CarouselIndicator(
-                                    count: First_List.length,
-                                    index: _CurrentPage,
-                                    color: Color.fromRGBO(164, 164, 164, 0.8),
-                                    activeColor: Colors.white,
-                                    width: 20.0 * Factor_Width,
-                                    height: 3 * Factor_Height,
-                                  ),
-                                  Container(height: 8 * Factor_Height),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  First_List[i].ImagePath!,
-                                ],
-                              ),
-                            ],
-                          ),
-                          Container(height: 18 * Factor_Height),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
+            items: _First_index.map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 24.0 * Factor_Width),
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(height: 16 * Factor_Height),
+                                First_List[i].Title!,
+                                Container(height: 15 * Factor_Height),
+                                CarouselIndicator(
+                                  count: First_List.length,
+                                  index: _CurrentPage,
+                                  color: Color.fromRGBO(164, 164, 164, 0.8),
+                                  activeColor: Colors.white,
+                                  width: 20.0 * Factor_Width,
+                                  height: 3 * Factor_Height,
+                                ),
+                                Container(height: 8 * Factor_Height),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                First_List[i].ImagePath!,
+                              ],
+                            ),
+                          ],
+                        ),
+                        Container(height: 18 * Factor_Height),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }).toList(),
           ),
-      ),
-    ],
+        ),
+      ],
     );
   }
 
@@ -373,10 +375,10 @@ class _Home_PageState extends State<Home_Page> {
                 width: 19 * Factor_Width,
                 child: GestureDetector
                   (
-                    child: Image.asset('assets/Home_Page_Arrow.png'),
-                    onTap: (){
+                  child: Image.asset('assets/Home_Page_Arrow.png'),
+                  onTap: (){
 
-                    },
+                  },
                 ),
               ),
             ],
@@ -388,7 +390,7 @@ class _Home_PageState extends State<Home_Page> {
             options: CarouselOptions(
               height: 187.5 * Factor_Height,
               enlargeCenterPage: true,
-              viewportFraction: 0.55,
+              viewportFraction: 0.65,
               autoPlay: false,
               onPageChanged: (e, reason)
               {
@@ -404,8 +406,17 @@ class _Home_PageState extends State<Home_Page> {
                   return Container(
                     //margin: EdgeInsets.symmetric(horizontal: 24.0 * Factor_Width),
                     //width: MediaQuery.of(context).size.width,
-                    child: Container(
-                      child: Second_List[i].ImagePath,
+                    child: GestureDetector( //프로필 편집 버튼
+                      onTap: () {
+                        imagetoactinfo(Second_List[i].path!);
+                      },
+                      child: Container(
+                        height: 30 * Factor_Height,
+                        margin: EdgeInsets.symmetric(horizontal: 18.0 * Factor_Width),
+                        child: Container(
+                          child: Second_List[i].ImagePath,
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -471,7 +482,7 @@ class _Home_PageState extends State<Home_Page> {
                   (
                   child: Image.asset('assets/Home_Page_Arrow.png'),
                   onTap: (){
-                    Navigator.pushReplacement(
+                    Navigator.push(
                         context,
                         CupertinoPageRoute(builder:
                             (context) => infolisttabbar()));
@@ -490,116 +501,116 @@ class _Home_PageState extends State<Home_Page> {
                 width: 13 * Factor_Height,
               ),
               StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('Activity_Collection').snapshots(),
-                builder: (context, snapshot) {
-                  return GestureDetector(
-                    onDoubleTap: () => _add_Heart_Num(_Activity_Name[0], _Doc_Information[0]),
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 125 * Factor_Height,
-                          width: 110 * Factor_Height,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(6.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color.fromRGBO(0, 0, 0, 0.25),
-                                offset: Offset(3.0, 3.0), //(x,y)
-                                blurRadius: 4.0,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 125 * Factor_Height,
-                          width: 110 * Factor_Height,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6.0),
-                            gradient: LinearGradient(
-                              begin: Alignment.bottomRight,
-                              end: Alignment.topLeft,
-                              colors: const <Color>[
-                                Color.fromRGBO(205, 0, 81, 0.2),
-                                Color.fromRGBO(205, 0, 81, 0.7),
+                  stream: FirebaseFirestore.instance.collection('Activity_Collection').snapshots(),
+                  builder: (context, snapshot) {
+                    return GestureDetector(
+                      onDoubleTap: () => _add_Heart_Num(_Activity_Name[0], _Doc_Information[0]),
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 125 * Factor_Height,
+                            width: 110 * Factor_Height,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  offset: Offset(3.0, 3.0), //(x,y)
+                                  blurRadius: 4.0,
+                                ),
                               ],
                             ),
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 6 * Factor_Height,
+                          Container(
+                            height: 125 * Factor_Height,
+                            width: 110 * Factor_Height,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft,
+                                colors: const <Color>[
+                                  Color.fromRGBO(205, 0, 81, 0.2),
+                                  Color.fromRGBO(205, 0, 81, 0.7),
+                                ],
                               ),
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                height: 75.0 * Factor_Height,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(6.0),
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: Image.asset(
-                                      'assets/Home_Page_Activity_Photo_1.png',
-                                    ),
-                                  ),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 6 * Factor_Height,
                                 ),
-                                width: 100.0 * Factor_Height,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromRGBO(0, 0, 0, 0.25),
-                                      offset: Offset(0.0, 4.0), //(x,y)
-                                      blurRadius: 4.0,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                height: 6.0 * Factor_Height,
-                              ),
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                height: 28.0 * Factor_Height,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 28 * Factor_Height,
-                                      width: 74 * Factor_Height,
-                                      child: RichText(
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        textAlign: TextAlign.center,
-                                        strutStyle: StrutStyle(fontSize: 11 * Factor_Height),
-                                        text: TextSpan(
-                                          text: _Activity_Name[0].Heart_Activity_Name,
-                                          style: TextStyle(
-                                            fontFamily: 'Spoqa-Medium',
-                                            fontSize: 11 * Factor_Height,
-                                            color: Colors.black,
-                                          ),
-                                        )
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  height: 75.0 * Factor_Height,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(6.0),
+                                    child: FittedBox(
+                                      fit: BoxFit.fill,
+                                      child: Image.asset(
+                                        'assets/Home_Page_Activity_Photo_1.png',
                                       ),
                                     ),
-                                    Spacer(),
-                                    Container(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          StreamBuilder<QuerySnapshot>(
-                                            stream: FirebaseFirestore.instance.collection('Activity_Collection').snapshots(),
-                                            builder: (context, snapshot) {
-                                              return GestureDetector(
-                                                child: Container(
-                                                    width: 16 * Factor_Height,
-                                                    height: 15 * Factor_Height,
-                                                    child: _Activity_Name[0].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
-                                                ),
-                                                onTap: () => _add_Heart_Num(_Activity_Name[0], _Doc_Information[0]),
-                                              );
-                                            }
-                                          ),
-                                          Spacer(),
-                                          Container(
+                                  ),
+                                  width: 100.0 * Factor_Height,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color.fromRGBO(0, 0, 0, 0.25),
+                                        offset: Offset(0.0, 4.0), //(x,y)
+                                        blurRadius: 4.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 6.0 * Factor_Height,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  height: 28.0 * Factor_Height,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 28 * Factor_Height,
+                                        width: 74 * Factor_Height,
+                                        child: RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            textAlign: TextAlign.center,
+                                            strutStyle: StrutStyle(fontSize: 11 * Factor_Height),
+                                            text: TextSpan(
+                                              text: _Activity_Name[0].Heart_Activity_Name,
+                                              style: TextStyle(
+                                                fontFamily: 'Spoqa-Medium',
+                                                fontSize: 11 * Factor_Height,
+                                                color: Colors.black,
+                                              ),
+                                            )
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            StreamBuilder<QuerySnapshot>(
+                                                stream: FirebaseFirestore.instance.collection('Activity_Collection').snapshots(),
+                                                builder: (context, snapshot) {
+                                                  return GestureDetector(
+                                                    child: Container(
+                                                      width: 16 * Factor_Height,
+                                                      height: 15 * Factor_Height,
+                                                      child: _Activity_Name[0].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                    ),
+                                                    onTap: () => _add_Heart_Num(_Activity_Name[0], _Doc_Information[0]),
+                                                  );
+                                                }
+                                            ),
+                                            Spacer(),
+                                            Container(
                                               child: Text(
                                                 '${_Activity_Name[0].Like_Num}',
                                                 textAlign: TextAlign.center,
@@ -609,25 +620,25 @@ class _Home_PageState extends State<Home_Page> {
                                                   color: Color(0xFF1C1C1C),
                                                 ),
                                               ),
-                                          ),
-                                        ],
+                                            ),
+                                          ],
+                                        ),
+                                        width: 16 * Factor_Height,
+                                        height: 27 * Factor_Height,
                                       ),
-                                      width: 16 * Factor_Height,
-                                      height: 27 * Factor_Height,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                height: 10.0 * Factor_Height,
-                              ),
-                            ],
+                                Container(
+                                  height: 10.0 * Factor_Height,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
+                        ],
+                      ),
+                    );
+                  }
               ), // First
               Container(
                 width: 10 * Factor_Height,
@@ -1204,146 +1215,146 @@ class _Home_PageState extends State<Home_Page> {
               Container(
                 width: 10 * Factor_Height,
               ),
-          StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('Activity_Collection').snapshots(),
-              builder: (context, snapshot) {
-                return GestureDetector(
-                  onDoubleTap: () => _add_Heart_Num(_Activity_Name[5], _Doc_Information[5]),
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 125 * Factor_Height,
-                        width: 110 * Factor_Height,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(6.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color.fromRGBO(0, 0, 0, 0.25),
-                              offset: Offset(3.0, 3.0), //(x,y)
-                              blurRadius: 4.0,
+              StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('Activity_Collection').snapshots(),
+                  builder: (context, snapshot) {
+                    return GestureDetector(
+                      onDoubleTap: () => _add_Heart_Num(_Activity_Name[5], _Doc_Information[5]),
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 125 * Factor_Height,
+                            width: 110 * Factor_Height,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  offset: Offset(3.0, 3.0), //(x,y)
+                                  blurRadius: 4.0,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 125 * Factor_Height,
-                        width: 110 * Factor_Height,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6.0),
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomRight,
-                            end: Alignment.topLeft,
-                            colors: const <Color>[
-                              Color.fromRGBO(205, 0, 81, 0.2),
-                              Color.fromRGBO(205, 0, 81, 0.7),
-                            ],
                           ),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 6 * Factor_Height,
+                          Container(
+                            height: 125 * Factor_Height,
+                            width: 110 * Factor_Height,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft,
+                                colors: const <Color>[
+                                  Color.fromRGBO(205, 0, 81, 0.2),
+                                  Color.fromRGBO(205, 0, 81, 0.7),
+                                ],
+                              ),
                             ),
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5.0),
-                              height: 75.0 * Factor_Height,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6.0),
-                                child: FittedBox(
-                                  fit: BoxFit.fill,
-                                  child: Image.asset(
-                                    'assets/Home_Page_Activity_Photo_6.png',
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 6 * Factor_Height,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  height: 75.0 * Factor_Height,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(6.0),
+                                    child: FittedBox(
+                                      fit: BoxFit.fill,
+                                      child: Image.asset(
+                                        'assets/Home_Page_Activity_Photo_6.png',
+                                      ),
+                                    ),
+                                  ),
+                                  width: 100.0 * Factor_Height,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color.fromRGBO(0, 0, 0, 0.25),
+                                        offset: Offset(0.0, 4.0), //(x,y)
+                                        blurRadius: 4.0,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              width: 100.0 * Factor_Height,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(0, 0, 0, 0.25),
-                                    offset: Offset(0.0, 4.0), //(x,y)
-                                    blurRadius: 4.0,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 6.0 * Factor_Height,
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5.0),
-                              height: 28.0 * Factor_Height,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: 28 * Factor_Height,
-                                    width: 74 * Factor_Height,
-                                    child: RichText(
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        textAlign: TextAlign.center,
-                                        strutStyle: StrutStyle(fontSize: 11 * Factor_Height),
-                                        text: TextSpan(
-                                          text: _Activity_Name[5].Heart_Activity_Name,
-                                          style: TextStyle(
-                                            fontFamily: 'Spoqa-Medium',
-                                            fontSize: 11 * Factor_Height,
-                                            color: Colors.black,
-                                          ),
-                                        )
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        StreamBuilder<QuerySnapshot>(
-                                            stream: FirebaseFirestore.instance.collection('Activity_Collection').snapshots(),
-                                            builder: (context, snapshot) {
-                                              return GestureDetector(
-                                                child: Container(
-                                                  width: 16 * Factor_Height,
-                                                  height: 15 * Factor_Height,
-                                                  child: _Activity_Name[5].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
-                                                ),
-                                                onTap: () => _add_Heart_Num(_Activity_Name[5], _Doc_Information[5]),
-                                              );
-                                            }
-                                        ),
-                                        Spacer(),
-                                        Container(
-                                          child: Text(
-                                            '${_Activity_Name[5].Like_Num}',
+                                Container(
+                                  height: 6.0 * Factor_Height,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  height: 28.0 * Factor_Height,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 28 * Factor_Height,
+                                        width: 74 * Factor_Height,
+                                        child: RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily: 'Spoqa-Medium',
-                                              fontSize: 8 * Factor_Height,
-                                              color: Color(0xFF1C1C1C),
-                                            ),
-                                          ),
+                                            strutStyle: StrutStyle(fontSize: 11 * Factor_Height),
+                                            text: TextSpan(
+                                              text: _Activity_Name[5].Heart_Activity_Name,
+                                              style: TextStyle(
+                                                fontFamily: 'Spoqa-Medium',
+                                                fontSize: 11 * Factor_Height,
+                                                color: Colors.black,
+                                              ),
+                                            )
                                         ),
-                                      ],
-                                    ),
-                                    width: 16 * Factor_Height,
-                                    height: 27 * Factor_Height,
+                                      ),
+                                      Spacer(),
+                                      Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            StreamBuilder<QuerySnapshot>(
+                                                stream: FirebaseFirestore.instance.collection('Activity_Collection').snapshots(),
+                                                builder: (context, snapshot) {
+                                                  return GestureDetector(
+                                                    child: Container(
+                                                      width: 16 * Factor_Height,
+                                                      height: 15 * Factor_Height,
+                                                      child: _Activity_Name[5].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                    ),
+                                                    onTap: () => _add_Heart_Num(_Activity_Name[5], _Doc_Information[5]),
+                                                  );
+                                                }
+                                            ),
+                                            Spacer(),
+                                            Container(
+                                              child: Text(
+                                                '${_Activity_Name[5].Like_Num}',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontFamily: 'Spoqa-Medium',
+                                                  fontSize: 8 * Factor_Height,
+                                                  color: Color(0xFF1C1C1C),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        width: 16 * Factor_Height,
+                                        height: 27 * Factor_Height,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                Container(
+                                  height: 10.0 * Factor_Height,
+                                ),
+                              ],
                             ),
-                            Container(
-                              height: 10.0 * Factor_Height,
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              }
-            ), // Sixth
+                    );
+                  }
+              ), // Sixth
               Container(
                 width: 10 * Factor_Height,
               ),
@@ -3494,30 +3505,30 @@ class _Home_PageState extends State<Home_Page> {
                                 borderRadius: BorderRadius.circular(6.0),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Color.fromRGBO(0, 0, 0, 0.25),
-                                      offset: Offset(3.0, 3.0), //(x,y)
-                                      blurRadius: 4.0,
+                                    color: Color.fromRGBO(0, 0, 0, 0.25),
+                                    offset: Offset(3.0, 3.0), //(x,y)
+                                    blurRadius: 4.0,
                                   ),
                                 ],
                               ),
                             ),
-                        Container(
-                        //margin: EdgeInsets.symmetric(horizontal: 24.0 * Factor_Width),
-                        //width: MediaQuery.of(context).size.width,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(6.0),
-                            child: FittedBox(
-                              fit: BoxFit.fill,
-                              child: Fifth_List[i].ImagePath,
+                            Container(
+                              //margin: EdgeInsets.symmetric(horizontal: 24.0 * Factor_Width),
+                              //width: MediaQuery.of(context).size.width,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(6.0),
+                                child: FittedBox(
+                                  fit: BoxFit.fill,
+                                  child: Fifth_List[i].ImagePath,
+                                ),
+                              ),
+                              height: 187.5 * Factor_Height,
+                              width: 187.5 * Factor_Height,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6.0),
+                                border: Border.all(color: Color(0xFFD4D4D4)),
+                              ),
                             ),
-                          ),
-                            height: 187.5 * Factor_Height,
-                            width: 187.5 * Factor_Height,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6.0),
-                              border: Border.all(color: Color(0xFFD4D4D4)),
-                            ),
-                          ),
                           ],
                         );
                       },

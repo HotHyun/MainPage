@@ -9,13 +9,12 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-Future<dynamic>? future_profile;
 Future<dynamic>? future_activity;
 
 String? username;
 String? grade;
 String? major;
-String? id;
+//String? id;
 String? state;
 String? major_image;
 String? URL;
@@ -40,6 +39,10 @@ List<dynamic> NFT = [] as List<dynamic>;
 
 
 class Profile_Page extends StatefulWidget {
+  String? ID_Prof;
+  String? Nick;
+  Profile_Page({this.ID_Prof, this.Nick});
+
   @override
   State<Profile_Page> createState() => _Profile_PageState();
 }
@@ -52,13 +55,31 @@ class _Profile_PageState extends State<Profile_Page>
   String? NickName = '';
 
   //late TabController _tabController;
-  getprofileData() async{
+
+  getactData() async{
+    schoolact.clear();
+    clubact.clear();
+    volunteer.clear();
+    extraact.clear();
+    NFT.clear();
+    snamelist.clear();
+    cnamelist.clear();
+    vnamelist.clear();
+    enamelist.clear();
 
     userInfo = await storage.read(key: "login");
     URL = userInfo!.split(" ")[1];
     NickName = await storage.read(key: "NickName");
     NickName_Split = NickName!.split(" ")[1];
 
+    print(widget.ID_Prof);
+    print(widget.Nick);
+
+    if(widget.ID_Prof != null && widget.Nick != null)
+    {
+      URL = widget.ID_Prof;
+      NickName_Split = widget.Nick;
+    }
 
     var docsnapshot = await FirebaseFirestore.instance.collection('users').doc(URL).get(); //하태혁의 주소
 
@@ -112,20 +133,6 @@ class _Profile_PageState extends State<Profile_Page>
       default:
         major_image = 'assets/postech_mej.png';
     }
-    return major_image;
-
-  }
-
-  getactData() async{
-    schoolact.clear();
-    clubact.clear();
-    volunteer.clear();
-    extraact.clear();
-    NFT.clear();
-    snamelist.clear();
-    cnamelist.clear();
-    vnamelist.clear();
-    enamelist.clear();
 
     var schoolactlist = await FirebaseFirestore.instance.collection('users').doc(URL).collection('schoolAct').get();
 
@@ -210,11 +217,9 @@ class _Profile_PageState extends State<Profile_Page>
 
     //build될 때 data 불러오는 함수들 실행
 
-    future_profile = getprofileData();
     future_activity = getactData();
 
     print(username);
-    print(id);
     print(major);
 
     return Scaffold(
@@ -338,22 +343,6 @@ class _Profile_PageState extends State<Profile_Page>
                 ),
               ),
               Spacer(),
-              Container(
-                  height: 18 * Factor_Height,
-                  width: 16 * Factor_Height,
-                  child: Image.asset('assets/coins 1.png')),
-              Container(width: 5 * Factor_Height),
-              Container(
-                height: 23 * Factor_Height,
-                width: 75 * Factor_Height,
-                child: Text(
-                  'PAM 320',
-                  style: TextStyle(
-                    fontFamily: 'Spoqa-Bold',
-                    fontSize: 18 * Factor_Height,
-                  ),
-                ),
-              ),
             ],
           ),
         ),

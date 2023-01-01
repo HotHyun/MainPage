@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'wallet.dart';
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'Main_HomePage.dart';
 
 import 'LogOutPage.dart';
@@ -77,9 +78,9 @@ class _LogInPageState extends State<LogInPage>
         key: "login",
         value: "URL " + URL,
       );
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
-        MaterialPageRoute(builder:
+        CupertinoPageRoute(builder:
             (context) => wallet()),
       );
   }
@@ -200,14 +201,14 @@ class _LogInPageState extends State<LogInPage>
                           ),
                         hintStyle: TextStyle(
                           fontSize: 14.4 * Factor_Width,
-                          fontFamily: "Spoqa-Regular",
+                          fontFamily: "Spoqa-Medium",
                           color: Color(0xFF818181),
                         ),
                         hintText: "학번을 입력해주세요",
                         ),
                         style: TextStyle(
                           fontSize: 14.4 * Factor_Width,
-                          fontFamily: "Spoqa-Regular",
+                          fontFamily: "Spoqa-Medium",
                           color: Color(0xFF3C3C3C),
                         ),
                       ),

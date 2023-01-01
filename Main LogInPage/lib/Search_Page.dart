@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:polygon_clipper/polygon_clipper.dart';
+import 'package:flutter/cupertino.dart';
+import 'Profile_Page.dart';
+import 'package:polygon_clipper/polygon_border.dart';
 import 'dart:async';
 
 class Person {
   String name;
   String major;
   String Image_Path;
+  String ID;
 
-  Person(this.name, this.major, this.Image_Path);
+  Person(this.name, this.major, this.Image_Path, this.ID);
 }
 
 class PersonTile extends StatelessWidget {
@@ -17,8 +23,26 @@ class PersonTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final standardDeviceWidth = 375;
+    final Factor_Width = deviceWidth / standardDeviceWidth;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceHeight = 812;
+    final Factor_Height = deviceHeight / standardDeviceHeight;
+
     return ListTile(
-      leading: Image.asset(_person.Image_Path),
+      leading: Container(
+        child: ClipPolygon(
+          sides: 6,
+          borderRadius: 15.0, // Default 0.0 degrees
+          rotate: 90.0, // Default 0.0 degrees
+          boxShadows: [
+            PolygonBoxShadow(color: Colors.grey, elevation: 5.0),
+          ],
+          child: Image.asset(_person.Image_Path,
+              height: 91 * Factor_Height, width: 91 * Factor_Height),
+        ),
+      ),
       title: Text(_person.name),
       subtitle: Text(_person.major),
     );
@@ -52,23 +76,36 @@ class _Search_PageState extends State<Search_Page> {
 
     for (int i = 0; i < ProfileData.docs.length; i++)
       {
+        var Profile_Act = await FirebaseFirestore.instance.collection('users').doc(ProfileData.docs[i].id).collection('Profile').get();
+        
         if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[0]))
           {
             if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[1]))
               {
                 if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[2]))
                   {
-                    List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)];
+                    List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
+                    , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
                     Profile_Information.add(Personal);
                     print(Profile_Information);
                     continue;
                   }
-                List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)];
+                if(_NextController1.text.length != 2)
+                  {
+                    continue;
+                  }
+                List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
+                , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
                 Profile_Information.add(Personal);
                 print(Profile_Information);
                 continue;
               }
-            List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)];
+            if(_NextController1.text.length != 1)
+              {
+                continue;
+              }
+            List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
+            , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
             Profile_Information.add(Personal);
             print(Profile_Information);
             continue;
@@ -142,7 +179,18 @@ class _Search_PageState extends State<Search_Page> {
               scrollDirection: Axis.vertical,
               children: <Widget>[
                 for (int i = 0; i < Profile_Information.length; i++)
-                  PersonTile(Person(Profile_Information[i][0], Profile_Information[i][1], 'assets/NFT_1.png'))
+                  GestureDetector(
+                    child: PersonTile(
+                      Person(Profile_Information[i][0], Profile_Information[i][1], 'assets/NFT_1.png', Profile_Information[i][2])
+                    ),
+                    onTap: ()
+                    {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(builder:
+                              (context) => Profile_Page(ID_Prof: Profile_Information[i][2], Nick: Profile_Information[i][3],)));
+                    },
+                  ),
               ],
             );
           }
@@ -203,14 +251,14 @@ class _Search_PageState extends State<Search_Page> {
                           border: InputBorder.none,
                           hintStyle: TextStyle(
                             fontSize: 15 * Factor_Width,
-                            fontFamily: "Spoqa-Regular",
+                            fontFamily: "Spoqa-Medium",
                             color: Color(0xFF979797),
                           ),
                           hintText: '검색'
                         ),
                         style: TextStyle(
                           fontSize: 14.4 * Factor_Width,
-                          fontFamily: "Spoqa-Regular",
+                          fontFamily: "Spoqa-Medium",
                           color: Color(0xFF3C3C3C),
                         ),
                       ),

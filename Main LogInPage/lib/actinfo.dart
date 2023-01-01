@@ -29,6 +29,41 @@ class MyApp extends StatelessWidget
   }
 }
 
+
+void imagetoactinfo(String path){ //image를 눌렀을 때 그 이미지에 맞는 actinfo를 가져오는 함수
+
+  var tempact = Act.def();
+
+  for(int i = 0; i< allactlist.length; i++){
+
+    if(path == allactlist[i]['image_path']){
+
+      var curact = allactlist[i];
+
+      tempact.activity_name = curact['activity_name'];
+      tempact.application_available = curact['application_available']; //활동 이름
+      tempact.application_period = curact['application_period']; //시작 날짜
+      tempact.category = curact['category'];
+      tempact.email = curact['e-mail'];
+      tempact.participating_grade = curact['participating_grade'];
+      tempact.operation_department = curact['operation_department'];
+      tempact.operation_period = curact['operation_period'];
+      tempact.image_path = curact['image_path'];
+      tempact.PAM = int.parse(curact['pam']);
+      tempact.manager = curact['manager'];
+      tempact.contact = curact['contact'];
+
+      break;
+
+    }
+
+
+  }
+  //Act.copy(tempact); //복사 생성자 호출 및 widget 빌드
+
+}
+
+
 class actinfo extends StatefulWidget {
 
   //class 안에 불필요하게 act를 다 집어넣는것보다는, 전역변수로 thisact 변수를 선언해서 이를 활용하는 방식이 나을 듯. 그렇게 수정했음 (아래는 수정 전 버전임)
@@ -74,6 +109,9 @@ class actinfo extends StatefulWidget {
     thisact.operation_department = act.operation_department;
     thisact.image_path = act.image_path;
     thisact.PAM = act.PAM;
+    thisact.contact = act.contact;
+    thisact.manager = act.manager;
+    thisact.operation_period = act.operation_period;
 
   }
 
@@ -234,7 +272,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.application_period!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
+                                  fontFamily: 'Spoqa-Medium',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -285,7 +323,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.operation_period!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
+                                  fontFamily: 'Spoqa-Medium',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -335,7 +373,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.participating_grade!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
+                                  fontFamily: 'Spoqa-Medium',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -385,7 +423,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.operation_department!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
+                                  fontFamily: 'Spoqa-Medium',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -435,7 +473,7 @@ class _actinfoState extends State<actinfo> {
                                 '054-279-9002',
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
+                                  fontFamily: 'Spoqa-Medium',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -486,7 +524,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.email!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
+                                  fontFamily: 'Spoqa-Medium',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),

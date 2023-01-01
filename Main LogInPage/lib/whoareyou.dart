@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'letsgo.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class whoareyou extends StatefulWidget {
   @override
@@ -166,7 +167,7 @@ class _whoareyouState extends State<whoareyou> {
                       _add_Information(user_Information(NicknameController.text));
                       Navigator.push(
                           context,
-                          MaterialPageRoute(
+                          CupertinoPageRoute(
                               builder: (context) =>
                                   letsgo()));
                       // letsgo 로 넘어감

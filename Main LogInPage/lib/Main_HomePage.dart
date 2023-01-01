@@ -6,6 +6,7 @@ import 'Request_Page.dart';
 import 'Request_Information.dart';
 import 'Profile_Page.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -108,9 +109,9 @@ class _Main_HomePageState extends State<Main_HomePage> {
 
             if(userInfo != null)
             {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
-                MaterialPageRoute(builder:
+                CupertinoPageRoute(builder:
                     (context) => LogOutPage(
                   URL: userInfo!.split(" ")[1],
                       ID: ID!.split(" ")[1],

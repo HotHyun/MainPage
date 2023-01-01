@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Main_HomePage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/cupertino.dart';
 
 class letsgo extends StatefulWidget{
   @override
@@ -155,7 +156,7 @@ class _letsgoState extends State<letsgo>
 
                       Navigator.push(
                        context,
-                        MaterialPageRoute(builder:
+                        CupertinoPageRoute(builder:
                            (context) => MyApp()),
                       );
                     },

@@ -49,6 +49,7 @@ dependencies:
   polygon_clipper: ^1.0.2
   http: ^0.13.5
   flutter_secure_storage: ^6.1.0
+  web3dart: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -73,18 +74,6 @@ flutter:
     - family: Spoqa-Medium
       fonts:
         - asset: assets/SpoqaHanSansNeo-Medium.otf
-
-    - family: Spoqa-Regular
-      fonts:
-        - asset: assets/SpoqaHanSansNeo-Regular.otf
-
-    - family: Spoqa-Light
-      fonts:
-        - asset: assets/SpoqaHanSansNeo-Light.otf
-
-    - family: Spoqa-Thin
-      fonts:
-        - asset: assets/SpoqaHanSansNeo-Thin.otf
 
     - family: Spoqa-Bold
       fonts:
