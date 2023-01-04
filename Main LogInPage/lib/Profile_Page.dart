@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:scaffold_gradient_background/scaffold_gradient_background.dart';
 
 Future<dynamic>? future_activity;
 
@@ -32,9 +34,11 @@ List<dynamic> vnamelist = [] as List<dynamic>;
 List<dynamic> extraact = [] as List<dynamic>;
 List<dynamic> enamelist = [] as List<dynamic>;
 
-List<dynamic> NFT_Information = [3, 'THE_GENESIS', 0, 20220907, 20221225, '생활자치회', '금상', 9999, 0];
-List<dynamic> NFT_Information_2 = [2, '차은성 바보', 0, 20220907, 20221225, '신상현', '멍청이', 999, 0];
-List<dynamic> NFT = [] as List<dynamic>;
+List<List<dynamic>> NFT = [];
+List<List<dynamic>> NFT_In = [];
+
+List<bool> NFT_Like_Check = [];
+
 
 
 
@@ -56,12 +60,33 @@ class _Profile_PageState extends State<Profile_Page>
 
   //late TabController _tabController;
 
+  void _add_Heart_Num(int i)
+  {
+    if(NFT[i][4] == true)
+    {
+      NFT[i][1] -= 1;
+      NFT[i][4] = false;
+    }
+    else
+    {
+      NFT[i][1] += 1;
+      NFT[i][4] = true;
+    }
+    FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').doc('NFT${i}').update(
+        {
+          'like_num' : NFT[i][1],
+          'is_Checked' : NFT[i][4],
+        }
+    );
+  }
+
   getactData() async{
     schoolact.clear();
     clubact.clear();
     volunteer.clear();
     extraact.clear();
     NFT.clear();
+    NFT_In.clear();
     snamelist.clear();
     cnamelist.clear();
     vnamelist.clear();
@@ -182,6 +207,51 @@ class _Profile_PageState extends State<Profile_Page>
       enamelist.add(name);
       extraact.add(act);
     }
+
+    var NFT_s = await FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').get();
+    for(int i = 0; i < NFT_s.docs.length; i++)
+    {
+      NFT_Like_Check.add(false);
+      Map<String, dynamic> temp = NFT_s.docs[i].data();
+      Map<String, dynamic> act = {};
+      List<dynamic> Out = [];
+      List<dynamic> In = [];
+      act.addAll({
+        'day_end' : temp['day_end'],
+        'day_start' : temp['day_start'],
+        'description' : temp['description'],
+        'detail' : temp['detail'],
+        'host' : temp['host'],
+        'image' : temp['image'],
+        'kind' : temp['kind'],
+        'like_num' : temp['like_num'],
+        'name' : temp['name'],
+        'prize' : temp['prize'],
+        'is_Checked' : temp['is_Checked'],
+        'id' : temp['id'],
+      });
+      Out.add(temp['name']);
+      Out.add(temp['like_num']);
+      Out.add(temp['detail']);
+      Out.add(temp['image']);
+      Out.add(temp['is_Checked']);
+      In.add(temp['name']);
+      In.add(temp['like_num']);
+      In.add(temp['detail']);
+      In.add(temp['image']);
+      In.add(temp['day_end']);
+      In.add(temp['day_start']);
+      In.add(temp['description']);
+      In.add(temp['host']);
+      In.add(temp['kind']);
+      In.add(temp['prize']);
+      In.add(temp['is_Checked']);
+      In.add(temp['id']);
+      NFT.add(Out);
+      NFT_In.add(In);
+    }
+
+
 
     print(username);
     print(URL);
@@ -503,7 +573,7 @@ class _Profile_PageState extends State<Profile_Page>
               children: [
                 Container(
 
-                  width: 120 * Factor_Width,
+                  width: 140 * Factor_Width,
                   child: Text(
                     '$ID학번\n$major',
                     style: TextStyle(
@@ -537,6 +607,477 @@ class _Profile_PageState extends State<Profile_Page>
             ),
           ),
         )
+      ],
+    );
+  }
+
+  Widget odd_Row_Container(int length)
+  {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final standardDeviceWidth = 375;
+    final Factor_Width = deviceWidth / standardDeviceWidth;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceHeight = 812;
+    final Factor_Height = deviceHeight / standardDeviceHeight;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      //shrinkWrap: true,
+      children: [
+        for(int i = 0 ; i < length ~/ 2 ; i++)
+        Row(
+        children: [
+          Column(
+            children: [
+              GestureDetector(
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 163 * Factor_Height,
+                      width: 163 * Factor_Height,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.25),
+                            offset: Offset(0.0, 4.0), //(x,y)
+                            blurRadius: 4.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(height: 163 * Factor_Height, width: 163 * Factor_Height,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6.0),
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Image.network(NFT[2*i][3]),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.0),
+                        border: Border.all(color: Color(0xFFD4D4D4)),
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder:
+                          (context) => Profile_Exactly_Page(NFT_In[2*i][11], 2*i)));
+                },
+              ),
+              Container(height: 5*Factor_Height),
+              Container(
+                width: 163 * Factor_Height,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(NFT[2*i][0], style: TextStyle(fontSize: 12, fontFamily: 'Spoqa-Bold'),),
+                        Text(NFT[2*i][2], style: TextStyle(fontSize: 11, fontFamily: 'Spoqa-Medium', color: Colors.grey),)
+                      ],
+                    ),
+                    Spacer(),
+                    Column(
+                      children: [
+                        StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').snapshots(),
+                            builder: (context, snapshot) {
+                              return GestureDetector(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 16 * Factor_Height,
+                                      height: 15 * Factor_Height,
+                                      child: Image.asset('assets/heart (2).png')
+                                    ),
+                                    Text(NFT[2*i][1].toString(), style: TextStyle(fontSize: 10, fontFamily: 'Spoqa-Medium'),)
+                                  ],
+                                ),
+                                onTap: () => _add_Heart_Num(2*i),
+                              );
+                            }
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Container(height: 10 * Factor_Height),
+            ],
+          ),
+          Spacer(),
+          Column(
+            children: [
+              GestureDetector(
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 163 * Factor_Height,
+                      width: 163 * Factor_Height,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.25),
+                            offset: Offset(0.0, 4.0), //(x,y)
+                            blurRadius: 4.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(height: 163 * Factor_Height, width: 163 * Factor_Height,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6.0),
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Image.network(NFT[2*i+1][3]),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6.0),
+                        border: Border.all(color: Color(0xFFD4D4D4)),
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder:
+                          (context) => Profile_Exactly_Page(NFT_In[2*i+1][11], 2*i+1)));
+                },
+              ),
+              Container(height: 5*Factor_Height),
+              Container(
+                width: 163 * Factor_Height,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(NFT[2*i+1][0], style: TextStyle(fontSize: 12, fontFamily: 'Spoqa-Bold'),),
+                        Text(NFT[2*i+1][2], style: TextStyle(fontSize: 11, fontFamily: 'Spoqa-Medium', color: Colors.grey),)
+                      ],
+                    ),
+                    Spacer(),
+                    Column(
+                      children: [
+                        StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').snapshots(),
+                            builder: (context, snapshot) {
+                              return GestureDetector(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 16 * Factor_Height,
+                                      height: 15 * Factor_Height,
+                                      child: Image.asset('assets/heart (2).png') //: Image.asset('assets/heart (1).png'),
+                                    ),
+                                    Text(NFT[2*i+1][1].toString(), style: TextStyle(fontSize: 10, fontFamily: 'Spoqa-Medium'),)
+                                  ],
+                                ),
+                                onTap: () => _add_Heart_Num(2*i + 1),
+                              );
+                            }
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Container(height: 10 * Factor_Height),
+            ],
+          ),
+        ]
+        ),
+
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              child: Stack(
+                children: [
+                  Container(
+                    height: 163 * Factor_Height,
+                    width: 163 * Factor_Height,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.25),
+                          offset: Offset(0.0, 4.0), //(x,y)
+                          blurRadius: 4.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(height: 163 * Factor_Height, width: 163 * Factor_Height,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6.0),
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Image.network(NFT[length - 1][3]),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.0),
+                      border: Border.all(color: Color(0xFFD4D4D4)),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: (){
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder:
+                        (context) => Profile_Exactly_Page(NFT_In[length-1][11], length-1)));
+              },
+            ),
+            Container(height: 5*Factor_Height),
+            Container(
+              width: 163 * Factor_Height,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(NFT[length - 1][0], style: TextStyle(fontSize: 12, fontFamily: 'Spoqa-Bold'),),
+                      Text(NFT[length - 1][2], style: TextStyle(fontSize: 11, fontFamily: 'Spoqa-Medium', color: Colors.grey),)
+                    ],
+                  ),
+                  Spacer(),
+                  Column(
+                    children: [
+                      StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').snapshots(),
+                          builder: (context, snapshot) {
+                            return GestureDetector(
+                              child: Column(
+                                children: [
+                                  Container(
+                                      width: 16 * Factor_Height,
+                                      height: 15 * Factor_Height,
+                                      child: Image.asset('assets/heart (2).png') //: Image.asset('assets/heart (1).png'),
+                                  ),
+                                  Text(NFT[length - 1][1].toString(), style: TextStyle(fontSize: 10, fontFamily: 'Spoqa-Medium'),)
+                                ],
+                              ),
+                              onTap: () => _add_Heart_Num(length - 1),
+                            );
+                          }
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Container(height: 10 * Factor_Height),
+          ],
+        ),
+      ],
+    );
+
+
+
+  }
+
+  Widget even_Row_Container(int length)
+  {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final standardDeviceWidth = 375;
+    final Factor_Width = deviceWidth / standardDeviceWidth;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceHeight = 812;
+    final Factor_Height = deviceHeight / standardDeviceHeight;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      //shrinkWrap: true,
+      children: [
+        for(int i = 0 ; i < length / 2 ; i++)
+          Row(
+              children: [
+                Column(
+                  children: [
+                    GestureDetector(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 163 * Factor_Height,
+                            width: 163 * Factor_Height,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  offset: Offset(0.0, 4.0), //(x,y)
+                                  blurRadius: 4.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(height: 163 * Factor_Height, width: 163 * Factor_Height,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(6.0),
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: Image.network(NFT[2*i][3]),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              border: Border.all(color: Color(0xFFD4D4D4)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(builder:
+                                (context) => Profile_Exactly_Page(NFT_In[2*i][11], 2*i)));
+                      },
+                    ),
+                    Container(height: 5*Factor_Height),
+                    Container(
+                      width: 163 * Factor_Height,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(NFT[2*i][0], style: TextStyle(fontSize: 12, fontFamily: 'Spoqa-Bold'),),
+                              Text(NFT[2*i][2], style: TextStyle(fontSize: 11, fontFamily: 'Spoqa-Medium', color: Colors.grey),)
+                            ],
+                          ),
+                          Spacer(),
+                          Column(
+                            children: [
+                              StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').snapshots(),
+                                  builder: (context, snapshot) {
+                                    return GestureDetector(
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                              width: 16 * Factor_Height,
+                                              height: 15 * Factor_Height,
+                                              child: Image.asset('assets/heart (2).png')
+                                          ),
+                                          Text(NFT[2*i][1].toString(), style: TextStyle(fontSize: 10, fontFamily: 'Spoqa-Medium'),)
+                                        ],
+                                      ),
+                                      onTap: () => _add_Heart_Num(2*i),
+                                    );
+                                  }
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(height: 10 * Factor_Height),
+                  ],
+                ),
+                Spacer(),
+                Column(
+                  children: [
+                    GestureDetector(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 163 * Factor_Height,
+                            width: 163 * Factor_Height,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  offset: Offset(0.0, 4.0), //(x,y)
+                                  blurRadius: 4.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(height: 163 * Factor_Height, width: 163 * Factor_Height,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(6.0),
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: Image.network(NFT[2*i+1][3]),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              border: Border.all(color: Color(0xFFD4D4D4)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(builder:
+                                (context) => Profile_Exactly_Page(NFT_In[2*i+1][11], 2*i+1)));
+                      },
+                    ),
+                    Container(height: 5*Factor_Height),
+                    Container(
+                      width: 163 * Factor_Height,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(NFT[2*i+1][0], style: TextStyle(fontSize: 12, fontFamily: 'Spoqa-Bold'),),
+                              Text(NFT[2*i+1][2], style: TextStyle(fontSize: 11, fontFamily: 'Spoqa-Medium', color: Colors.grey),)
+                            ],
+                          ),
+                          Spacer(),
+                          Column(
+                            children: [
+                              StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').snapshots(),
+                                  builder: (context, snapshot) {
+                                    return GestureDetector(
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                              width: 16 * Factor_Height,
+                                              height: 15 * Factor_Height,
+                                              child: Image.asset('assets/heart (2).png') //: Image.asset('assets/heart (1).png'),
+                                          ),
+                                          Text(NFT[2*i+1][1].toString(), style: TextStyle(fontSize: 10, fontFamily: 'Spoqa-Medium'),)
+                                        ],
+                                      ),
+                                      onTap: () => _add_Heart_Num(2*i + 1),
+                                    );
+                                  }
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(height: 10 * Factor_Height),
+                  ],
+                ),
+              ]
+          ),
       ],
     );
   }
@@ -724,6 +1265,7 @@ class _Profile_PageState extends State<Profile_Page>
 
   Widget NFT_Page()
   {
+
     final deviceWidth = MediaQuery.of(context).size.width;
     final standardDeviceWidth = 375;
     final Factor_Width = deviceWidth / standardDeviceWidth;
@@ -751,42 +1293,7 @@ class _Profile_PageState extends State<Profile_Page>
                 ),
               ),
               Container(height: 8 * Factor_Height),
-              Stack(
-                children: [
-                  Container(
-                    height: 187.5 * Factor_Height,
-                    width: 187.5 * Factor_Height,
-                    decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(6.0),
-                    boxShadow: [
-                      BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.25),
-                      offset: Offset(0.0, 4.0), //(x,y)
-                      blurRadius: 4.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                  //margin: EdgeInsets.symmetric(horizontal: 24.0 * Factor_Width),
-                  //width: MediaQuery.of(context).size.width,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6.0),
-                        child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.asset('assets/NFT_1.png'),
-                        ),
-                      ),
-                      height: 187.5 * Factor_Height,
-                      width: 187.5 * Factor_Height,
-                      decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.0),
-                      border: Border.all(color: Color(0xFFD4D4D4)),
-                    ),
-                  ),
-                ],
-              ),
+              NFT_In.length.isOdd ? odd_Row_Container(NFT_In.length) : even_Row_Container(NFT_In.length),
             ],
           ),
         ),
@@ -794,3 +1301,110 @@ class _Profile_PageState extends State<Profile_Page>
     );
   }
 }
+
+class Profile_Exactly_Page extends StatefulWidget {
+  String ID;
+  int i;
+
+  Profile_Exactly_Page(this.ID, this.i);
+
+  @override
+  State<Profile_Exactly_Page> createState() => _Profile_Exactly_PageState();
+}
+
+class _Profile_Exactly_PageState extends State<Profile_Exactly_Page> {
+  @override
+  Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final standardDeviceWidth = 375;
+    final Factor_Width = deviceWidth / standardDeviceWidth;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceHeight = 812;
+    final Factor_Height = deviceHeight / standardDeviceHeight;
+
+    return ScaffoldGradientBackground(
+      gradient: LinearGradient(
+        begin: Alignment.bottomCenter,
+        end: Alignment.topCenter,
+        colors: [
+          Colors.white,
+          Colors.pinkAccent,
+        ],
+        stops: [0.49, 0.8]
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(height: 110 * Factor_Height),
+          Stack(
+            children: [
+              Container(
+                height: 275 * Factor_Height,
+                width: 275 * Factor_Height,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(6.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.25),
+                      offset: Offset(0.0, 4.0), //(x,y)
+                      blurRadius: 4.0,
+                    ),
+                  ],
+                ),
+              ),
+              Container(height: 275 * Factor_Height, width: 275 * Factor_Height,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6.0),
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: Image.network(NFT[widget.i][3]),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6.0),
+                  border: Border.all(color: Color(0xFFD4D4D4)),
+                ),
+              ),
+            ],
+          ),
+          Container(height: 25 * Factor_Height),
+          Text(NFT[widget.i][0], style: TextStyle(fontFamily: 'Spoqa-Bold', fontSize: 30 * Factor_Height),),
+          Text(NFT[widget.i][2], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 22 * Factor_Height, color: Colors.grey),),
+          Container(height: 5 * Factor_Height),
+          Icon(Icons.favorite, color: Colors.red, size: 23 * Factor_Height,),
+          Text(NFT[widget.i][1].toString(), style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 14 * Factor_Height),),
+          Container(height: 25 * Factor_Height),
+          RichText(
+              overflow: TextOverflow.visible,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              strutStyle: StrutStyle(fontSize: 11 * Factor_Height),
+              text: TextSpan(
+                text: NFT_In[widget.i][6],
+                style: TextStyle(
+                  fontFamily: 'Spoqa-Bold',
+                  fontSize: 22 * Factor_Height,
+                  color: Colors.black,
+                ),
+              )
+          ),
+          Container(height: 25 * Factor_Height),
+          Text('NFT-ID: '+NFT_In[widget.i][11], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
+          Container(height: 2 * Factor_Height),
+          Text('kind: '+NFT_In[widget.i][8], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
+          Container(height: 2 * Factor_Height),
+          Text('prize: '+NFT_In[widget.i][9], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
+          Container(height: 2 * Factor_Height),
+          Text('host: '+NFT_In[widget.i][7], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
+          Container(height: 2 * Factor_Height),
+          Text('day_start: '+NFT_In[widget.i][5], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
+          Container(height: 2 * Factor_Height),
+          Text('day_end: '+NFT_In[widget.i][4], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
+        ],
+      ),
+    );
+  }
+}
+

@@ -72,27 +72,34 @@ class _walletState extends State<wallet> {
   var tokenList , totalCount , IdList, URIList;
 
   // jsonURI를 받아 그 URI에 저장된 json파일 정보를 변수 attr에 저장 (dynamic list로)
-  Future<dynamic> getjson(dynamic jsonURI) async{
+  Future<dynamic> getjson(dynamic jsonURI, int i) async{
     var uriResponse = await http.get(
       Uri.parse(jsonURI),
     );
 
     var jsonBody = utf8.decode(uriResponse.bodyBytes);
     Map<String, dynamic> json = jsonDecode(jsonBody);
-    var attr = json['attributes'][0];
-/*
-    setState(() {
-      fire.FirebaseFirestore.instance.collection('users').doc(userInfo!.split(" ")[1]).collection('NFT').add(
-          {
-            'ID' : attr[0],
-            'Name' : attr[1],
-            'Kind' : attr[2],
+    var attr = json['attributes'];
 
+    setState(() {
+      fire.FirebaseFirestore.instance.collection('users').doc(ID_2000!.split(" ")[1]).collection('NFT').doc('NFT${i}').set(
+          {
+            'name' : json['name'].toString(),
+            'description' : json['description'].toString(),
+            'image' : json['image'].toString(),
+            'kind' : attr[0]['value'].toString(),
+            'detail' : attr[1]['value'].toString(),
+            'day_start' : attr[2]['value'].toString(),
+            'day_end' : attr[3]['value'].toString(),
+            'host' : attr[4]['value'].toString(),
+            'prize' : attr[5]['value'].toString(),
+            'like_num' : 0,
+            'id' : IdList[i].toString()
           }
       );
-    });*/
+    });
     print("json: ${json}");
-    print("attributes(value): ${attr['value']}");
+    //print("attributes(value): ${attr['value']}");
     print("imageURI: ${json['image']}");
   }
 
@@ -156,6 +163,8 @@ class _walletState extends State<wallet> {
 
   String? userInfo = "";
 
+  String? ID_2000 = "";
+
   static final storage = new FlutterSecureStorage();
 
   @override
@@ -170,6 +179,7 @@ class _walletState extends State<wallet> {
   _asyncMethod() async
   {
     userInfo = await storage.read(key: "MetaMask");
+    ID_2000 = await storage.read(key: "login");
     print(userInfo);
   }
 
@@ -191,6 +201,56 @@ class _walletState extends State<wallet> {
         print(exp);
       }
     }
+  }
+
+  void FlutterDialog() {
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            //Dialog Main Title
+            title: Column(
+              children: <Widget>[
+                Center(child: new Text("메타마스크가 연결되었습니다", style: TextStyle(fontSize: 17, fontFamily: 'Spoqa-Bold',), textAlign: TextAlign.center,)),
+              ],
+            ),
+            //
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "확인 버튼을 누르시면 다음 화면으로 넘어갑니다",
+                  style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 15),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              new TextButton(
+                child: new Text("확인"),
+                onPressed: () {
+                  for(int i = 0; i < URIList.length; i++)
+                  {
+                    print("차은성 ㅈㄴ 바보");
+                    print(URIList[i]);
+                    getjson(URIList[i], i); // attr 이라는 변수에 저장을 한다며
+                    print(IdList[i]);
+                  }
+
+                  Navigator.push( // 연동된 경우 true를 return하는 isconnected가 true일 경우 다음으로 버튼을 눌렀을 때 다음 페이지로 넘어가고, false일 경우 버튼을 눌렀을 때 반응이 없도록 설계
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => whoareyou()));
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
@@ -320,15 +380,6 @@ class _walletState extends State<wallet> {
                       //getTokenList();
                       //print("!!!!!!!!!!!!!!!!!!!!!");
                     }// metamask 웹 페이지로 넘어가도록 추후 구현
-                    else
-                      {
-                        print("!111111111111111111");
-                        getIdsbyOwner(myaddress); // IDList에다가 값 집어넣기
-                        print("111111111111111111111111");
-                        getURIsbyOwner(myaddress); // URLList에다가 값 집어넣기
-                        print("@222222222222222222222222");
-                      }//print("_session: !null");
-                    //print(_session);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -445,17 +496,13 @@ class _walletState extends State<wallet> {
 
                       if(_session!=null)
                         {
-                          for(int i = 0; i < URIList.length; i++)
-                          {
-                            print("차은성 ㅈㄴ 바보");
-                            print(URIList[i]);
-                            getjson(URIList[i]); // attr 이라는 변수에 저장을 한다며
-                            print(IdList[i]);
-                          }
-                          Navigator.push( // 연동된 경우 true를 return하는 isconnected가 true일 경우 다음으로 버튼을 눌렀을 때 다음 페이지로 넘어가고, false일 경우 버튼을 눌렀을 때 반응이 없도록 설계
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => whoareyou()));
+                          print("!111111111111111111");
+                          getIdsbyOwner(myaddress); // IDList에다가 값 집어넣기
+                          print("111111111111111111111111");
+                          getURIsbyOwner(myaddress); // URLList에다가 값 집어넣기
+                          print("@222222222222222222222222");
+
+                          FlutterDialog();
                         }
                       // whoareyou 페이지로 넘어감
                     },
