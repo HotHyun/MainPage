@@ -20,6 +20,7 @@ List <Map<String, dynamic>> allactlist = [];
 List <Map<String, dynamic>> availableactlist = []; // 신청 가능한 리스트
 List <Map<String, dynamic>> nowactlist = []; // 운영 중인 리스트
 List <Map<String, dynamic>> endedactlist = []; // 종료된 리스트
+List <Map<String, dynamic>> extraactlist = []; // 외부 활동 리스트
 
 makeactlist() async {
 
@@ -34,27 +35,40 @@ makeactlist() async {
       'application_available': temp['application_available'], // 신청 가능 여부 (활동의 종류)
       'application_period': temp['application_period'], // 신청 기간
       'category': temp['category'], // 카테고리
-      'contact' : temp['contact'],
-      'e-mail' : temp['e-mail'], // 담당자 이메일
-      'image_path' : temp['image_path'], // 활동 이미지 경로 (따로 넣어줘야 할듯)
-      'manager' : temp['manager'],
+      'pam': temp['pam'], // 팜
+      'e-mail' : temp['활동유형'], // 담당자 이메일
+      'participating_grade' : temp['participating_grade'], // 참여 학년
       'operation_department' : temp['operation_department'], // 담당 기관
       'operation_period' : temp['operation_period'], //활동 기간
-      'pam': temp['pam'], // 팜
-      'participating_grade' : temp['participating_grade'], // 참여 학년
+      'image_path' : temp['image_path'] // 활동 이미지 경로 (따로 넣어줘야 할듯)
     });
-
-    print(allactlist);
-    print(nowactlist);
-    print(availableactlist);
-    print(endedactlist);
 
     if (allactlist[i]['aplication_available'] == '운영중') nowactlist.add(allactlist[i]); // 운영 중일 경우
     else if (allactlist[i]['aplication_available'] == '신청가능') availableactlist.add(allactlist[i]); // 신청 가능한 경우
     else endedactlist.add(endedactlist[i]); // 종료된 경우
 
   }
-  return 0;
+
+  var tempextraact = await FirebaseFirestore.instance
+      .collection('competition')
+      .get(); //활동 list query 가져오기
+
+  for (int i = 0; i < tempextraact.docs.length; i++) { // 활동 넣고, 운영 중 / 신청 가능 / 종료된 활동으로 분류하기
+    Map<String, dynamic> temp = tempextraact.docs[i].data();
+    extraactlist[i].addAll({
+      'activity_name': temp['activity_name'], // 활동 이름
+      'application_link': temp['application_link'], // 지원 링크
+      'detail_link': temp['detail_link'], // 상세정보 링크
+    });
+  }
+
+  print(allactlist);
+  print(nowactlist);
+  print(availableactlist);
+  print(endedactlist);
+  print(extraactlist);
+
+
 }
 
 
@@ -270,12 +284,27 @@ class Act extends StatelessWidget {
   String? operation_department;
   String? operation_period;
   String? image_path;
-  String? contact;
   int? PAM;
-  String? manager;
 
   Act.def(){ //default 생성자
 
+
+    return; //생성만 하고 widget build 하지 않고 return
+
+  }
+
+  Act.copy(Act tempact){ // 복사생성자
+
+    activity_name = tempact.activity_name;
+    application_available = tempact.application_available; //활동 이름
+    application_period = tempact.application_period; //시작 날짜
+    category = tempact.category;
+    email = tempact.email;
+    participating_grade = tempact.participating_grade;
+    operation_department = tempact.operation_department;
+    operation_period = tempact.operation_period;
+    image_path = tempact.image_path;
+    PAM = tempact.PAM;
   }
 
   Act(int available, int idx){ //  Act initializer - 어떤 상태 종류의 활동이고, 그 활동 리스트의 몇 번째 인덱스인지를 매개변수로 받아서 전역변수 활동 리스트에서 값 가져옴.
@@ -292,8 +321,7 @@ class Act extends StatelessWidget {
       operation_period = availableactlist[idx]['operation_period'];
       image_path = availableactlist[idx]['image_path'];
       PAM = int.parse(availableactlist[idx]['pam']);
-      manager = availableactlist[idx]['manager'];
-      contact = availableactlist[idx]['contact'];
+
     }
 
     else if (available == 2){ // 운영 중 리스트
@@ -308,8 +336,7 @@ class Act extends StatelessWidget {
       operation_period = nowactlist[idx]['operation_period'];
       image_path = nowactlist[idx]['image_path'];
       PAM = int.parse(nowactlist[idx]['pam']);
-      manager = availableactlist[idx]['manager'];
-      contact = availableactlist[idx]['contact'];
+
     }
 
     else { // 종료된 리스트
@@ -324,8 +351,7 @@ class Act extends StatelessWidget {
       operation_period = endedactlist[idx]['operation_period'];
       image_path = endedactlist[idx]['image_path'];
       PAM = int.parse(endedactlist[idx]['pam']);
-      manager = availableactlist[idx]['manager'];
-      contact = availableactlist[idx]['contact'];
+
     }
 
   }
@@ -341,7 +367,7 @@ class Act extends StatelessWidget {
     final standardDeviceHeight = 812;
     final Factor_Height = deviceHeight / standardDeviceHeight;
 
-    return Container(
+    return Container( // 내용이 차 있는 경우 Container 빌드
       height: 105 * Factor_Height,
       width: 375 * Factor_Width,
       decoration: BoxDecoration(
@@ -356,7 +382,7 @@ class Act extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => actinfo(this)), // 누르면 그 활동의 정보로 들어가게 설정 (구조 바꿔야 할듯.. 매개변수 로 여러 정보를 넘기거나?)
+                  builder: (context) => actinfo(this)), // 누르면 그 활동의 정보로 들어가게 설정
             );
           },
           child: Row(

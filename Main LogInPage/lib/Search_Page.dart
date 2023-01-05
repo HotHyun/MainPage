@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:get/get.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:flutter/cupertino.dart';
 import 'Profile_Page.dart';
@@ -76,41 +77,48 @@ class _Search_PageState extends State<Search_Page> {
 
     for (int i = 0; i < ProfileData.docs.length; i++)
       {
-        var Profile_Act = await FirebaseFirestore.instance.collection('users').doc(ProfileData.docs[i].id).collection('Profile').get();
-        
-        if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[0]))
+        var light = await FirebaseFirestore.instance.collection('users').doc(ProfileData.docs[i].id);
+        var Profile_Act = await light.collection('Profile').get();
+
+        var _checking = await light.collection('MetaMask').doc('ID').get();
+
+        print(_checking.data());
+        if(_checking.data() != null)
           {
-            if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[1]))
+            if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[0]))
+            {
+              if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[1]))
               {
                 if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[2]))
-                  {
-                    List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
+                {
+                  List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
                     , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
-                    Profile_Information.add(Personal);
-                    print(Profile_Information);
-                    continue;
-                  }
+                  Profile_Information.add(Personal);
+                  print(Profile_Information);
+                  continue;
+                }
                 if(_NextController1.text.length != 2)
-                  {
-                    continue;
-                  }
+                {
+                  continue;
+                }
                 List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
-                , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
+                  , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
                 Profile_Information.add(Personal);
                 print(Profile_Information);
                 continue;
               }
-            if(_NextController1.text.length != 1)
+              if(_NextController1.text.length != 1)
               {
                 continue;
               }
-            List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
-            , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
-            Profile_Information.add(Personal);
-            print(Profile_Information);
-            continue;
+              List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
+                , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
+              Profile_Information.add(Personal);
+              print(Profile_Information);
+              continue;
+            }
           }
-      }
+          }
     return 1;
   }
 
@@ -196,7 +204,14 @@ class _Search_PageState extends State<Search_Page> {
           }
           else if(snapshot.hasData == false)
           {
-            return Center(child: CircularProgressIndicator(color: Color(0xFFCD0051)));
+            return Center(child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(color: Color(0xFFCD0051)),
+                Container(height: 10),
+                Text('User 정보를 검색 중입니다. 잠시만 기다려주세요 !', style: TextStyle(fontFamily: 'Spoqa-Medium'),)
+              ],
+            ));
           }
           else if(snapshot.hasError)
           {

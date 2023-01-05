@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:polygon_clipper/polygon_border.dart';
-import 'Profile_Edit_Page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'dart:async';
@@ -21,6 +20,8 @@ String? state;
 String? major_image;
 String? URL;
 String? NickName_Split;
+String introduce = '1';
+String Selected_Image = '1';
 
 List<dynamic> schoolact = [] as List<dynamic>;
 List<dynamic> snamelist = [] as List<dynamic>;
@@ -38,6 +39,91 @@ List<List<dynamic>> NFT = [];
 List<List<dynamic>> NFT_In = [];
 
 List<bool> NFT_Like_Check = [];
+
+class Profile_Edit_Page extends StatefulWidget {
+  const Profile_Edit_Page({Key? key}) : super(key: key);
+
+  @override
+  State<Profile_Edit_Page> createState() => _Profile_Edit_PageState();
+}
+
+class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
+  @override
+  Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final standardDeviceWidth = 375;
+    final Factor_Width = deviceWidth / standardDeviceWidth;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceHeight = 812;
+    final Factor_Height = deviceHeight / standardDeviceHeight;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: ListView(
+        children: [
+          Container(height: 120 * Factor_Height),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 16.0  * Factor_Width),
+            child: Text('Profile NFT Select', style: TextStyle(fontFamily: 'Spoqa-Bold', fontSize: 30 * Factor_Height),),
+          ),
+          Container(height: 10 * Factor_Height,),
+          Container(
+            margin: EdgeInsets.fromLTRB(16 * Factor_Height, 0, 0, 0),
+            height: 120*Factor_Height,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for(int i = 0; i < NFT.length ; i++)
+                  Container(
+                    height: 120 * Factor_Height,
+                    width: 120 * Factor_Height,
+                    child: GestureDetector(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 100 * Factor_Height,
+                            width: 100 * Factor_Height,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  offset: Offset(0.0, 4.0), //(x,y)
+                                  blurRadius: 4.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(height: 100 * Factor_Height, width: 100 * Factor_Height,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(6.0),
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: Image.network(NFT[i][3]),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              border: Border.all(color: Color(0xFFD4D4D4)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onTap: (){
+                        Selected_Image = NFT[i][3];
+                        
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 
 
@@ -383,10 +469,13 @@ class _Profile_PageState extends State<Profile_Page>
                     sides: 6,
                     borderRadius: 15.0, // Default 0.0 degrees
                     rotate: 90.0, // Default 0.0 degrees
-                    child: Image.asset('assets/NFT_1.png',
-                        height: 91 * Factor_Height, width: 91 * Factor_Height),
+                    child: introduce == '1' ? Image.asset('assets/phonix.png',
+                        height: 91 * Factor_Height, width: 91 * Factor_Height)
+                    : Image.network(Selected_Image, height: 91 * Factor_Height, width: 91 * Factor_Height),
                   ),
                   decoration: ShapeDecoration(
+                    color: Colors.white,
+                    //shadows:
                     shape: PolygonBorder(
                       sides: 6,
                       borderRadius: 15.0,
@@ -444,10 +533,10 @@ class _Profile_PageState extends State<Profile_Page>
             ),
           ),
         ),
-        Container(
+        widget.ID_Prof == null ? Container(
           height: 16 * Factor_Height,
-        ),
-        GestureDetector(
+        ) : Container(),
+        widget.ID_Prof == null ? GestureDetector(
           onTap: () {
             Navigator.push(
               context,
@@ -474,10 +563,10 @@ class _Profile_PageState extends State<Profile_Page>
               ),
             ),
           ),
-        ),
-        Container(
+        ) : Container(),
+        widget.ID_Prof == null ? Container(
           height: 14 * Factor_Height,
-        ),
+        ) : Container(),
         Container(
           height: 70 * Factor_Height,
           margin: EdgeInsets.symmetric(horizontal: 11.0 * Factor_Width),
@@ -491,7 +580,7 @@ class _Profile_PageState extends State<Profile_Page>
                   boxShadows: [
                     PolygonBoxShadow(color: Colors.grey, elevation: 5.0),
                   ],
-                  child: Image.asset('assets/NFT_1.png',
+                  child: Image.network(NFT[0][3],
                       height: 91 * Factor_Height, width: 91 * Factor_Height),
                 ),
               ),
@@ -503,7 +592,7 @@ class _Profile_PageState extends State<Profile_Page>
                   boxShadows: [
                     PolygonBoxShadow(color: Colors.grey, elevation: 5.0),
                   ],
-                  child: Image.asset('assets/NFT_2.png',
+                  child: Image.network(NFT[1][3],
                       height: 91 * Factor_Height, width: 91 * Factor_Height),
                 ),
               ),
@@ -515,7 +604,7 @@ class _Profile_PageState extends State<Profile_Page>
                   boxShadows: [
                     PolygonBoxShadow(color: Colors.grey, elevation: 5.0),
                   ],
-                  child: Image.asset('assets/NFT_3.png',
+                  child: Image.network(NFT[2][3],
                       height: 91 * Factor_Height, width: 91 * Factor_Height),
                 ),
               ),
@@ -527,7 +616,7 @@ class _Profile_PageState extends State<Profile_Page>
                   boxShadows: [
                     PolygonBoxShadow(color: Colors.grey, elevation: 5.0),
                   ],
-                  child: Image.asset('assets/NFT_4.png',
+                  child: Image.network(NFT[3][3],
                       height: 91 * Factor_Height, width: 91 * Factor_Height),
                 ),
               ),
@@ -1407,4 +1496,5 @@ class _Profile_Exactly_PageState extends State<Profile_Exactly_Page> {
     );
   }
 }
+
 

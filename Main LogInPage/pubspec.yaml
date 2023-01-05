@@ -51,6 +51,8 @@ dependencies:
   flutter_secure_storage: ^6.1.0
   web3dart: ^2.1.1
   scaffold_gradient_background: ^1.0.3+1
+  firebase_messaging: ^14.2.1
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:

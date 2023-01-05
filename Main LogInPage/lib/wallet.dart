@@ -82,6 +82,12 @@ class _walletState extends State<wallet> {
     var attr = json['attributes'];
 
     setState(() {
+      fire.FirebaseFirestore.instance.collection('users').doc(ID_2000!.split(" ")[1]).collection('MetaMask').doc('ID').set(
+          {'MetaMask_ID' : _session.accounts[0]}
+      );
+    });
+
+    setState(() {
       fire.FirebaseFirestore.instance.collection('users').doc(ID_2000!.split(" ")[1]).collection('NFT').doc('NFT${i}').set(
           {
             'name' : json['name'].toString(),
@@ -429,11 +435,11 @@ class _walletState extends State<wallet> {
                 height: 53 * Factor_Height,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    /*Navigator.push(
                         context,
                         CupertinoPageRoute(
                             builder: (context) =>
-                                whoareyou())); // metamask 웹 페이지로 넘어가도록 추후 구현
+                                whoareyou())); // metamask 웹 페이지로 넘어가도록 추후 구현*/
                   },
                   child: Container(
                     decoration: BoxDecoration(

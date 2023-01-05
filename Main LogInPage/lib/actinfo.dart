@@ -50,8 +50,6 @@ void imagetoactinfo(String path){ //image를 눌렀을 때 그 이미지에 맞�
       tempact.operation_period = curact['operation_period'];
       tempact.image_path = curact['image_path'];
       tempact.PAM = int.parse(curact['pam']);
-      tempact.manager = curact['manager'];
-      tempact.contact = curact['contact'];
 
       break;
 
@@ -59,7 +57,7 @@ void imagetoactinfo(String path){ //image를 눌렀을 때 그 이미지에 맞�
 
 
   }
-  //Act.copy(tempact); //복사 생성자 호출 및 widget 빌드
+  Act.copy(tempact); //복사 생성자 호출 및 widget 빌드
 
 }
 
@@ -109,9 +107,6 @@ class actinfo extends StatefulWidget {
     thisact.operation_department = act.operation_department;
     thisact.image_path = act.image_path;
     thisact.PAM = act.PAM;
-    thisact.contact = act.contact;
-    thisact.manager = act.manager;
-    thisact.operation_period = act.operation_period;
 
   }
 
@@ -272,7 +267,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.application_period!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Medium',
+                                  fontFamily: 'Spoqa-Regular',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -323,7 +318,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.operation_period!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Medium',
+                                  fontFamily: 'Spoqa-Regular',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -373,7 +368,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.participating_grade!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Medium',
+                                  fontFamily: 'Spoqa-Regular',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -423,7 +418,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.operation_department!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Medium',
+                                  fontFamily: 'Spoqa-Regular',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -473,7 +468,7 @@ class _actinfoState extends State<actinfo> {
                                 '054-279-9002',
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Medium',
+                                  fontFamily: 'Spoqa-Regular',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -524,7 +519,7 @@ class _actinfoState extends State<actinfo> {
                                 thisact.email!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Medium',
+                                  fontFamily: 'Spoqa-Regular',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),

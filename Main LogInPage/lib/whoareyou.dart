@@ -33,7 +33,7 @@ class _whoareyouState extends State<whoareyou> {
       value: "NickName " + information.Nickname!,
     );
     setState(() {
-      FirebaseFirestore.instance.collection('users').doc(userInfo!.split(" ")[1]).collection('Profile').add(
+      FirebaseFirestore.instance.collection('users').doc(userInfo!.split(" ")[1]).collection('Profile').doc('Nickname').set(
           {'Nickname' : information.Nickname}
       );
       NicknameController.text = '';
