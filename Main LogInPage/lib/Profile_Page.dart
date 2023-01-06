@@ -3,12 +3,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:polygon_clipper/polygon_border.dart';
+//import 'Profile_Edit_Page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:scaffold_gradient_background/scaffold_gradient_background.dart';
+
 
 Future<dynamic>? future_activity;
 
@@ -20,8 +22,9 @@ String? state;
 String? major_image;
 String? URL;
 String? NickName_Split;
-String introduce = '1';
-String Selected_Image = '1';
+//String? NickName = '';
+String? Profile_path = '1';
+String? introduce = '';
 
 List<dynamic> schoolact = [] as List<dynamic>;
 List<dynamic> snamelist = [] as List<dynamic>;
@@ -48,6 +51,10 @@ class Profile_Edit_Page extends StatefulWidget {
 }
 
 class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
+
+  var _controller = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -57,23 +64,58 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
     final standardDeviceHeight = 812;
     final Factor_Height = deviceHeight / standardDeviceHeight;
 
+    if(introduce == '') introduce = '한줄소개가 없습니다.';
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
+        scrollDirection: Axis.vertical,
         children: [
           Container(height: 120 * Factor_Height),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 16.0  * Factor_Width),
-            child: Text('Profile NFT Select', style: TextStyle(fontFamily: 'Spoqa-Bold', fontSize: 30 * Factor_Height),),
+            margin: EdgeInsets.symmetric(horizontal: 16.0 * Factor_Width),
+            child: Text(
+              'Profile NFT Select',
+              style: TextStyle(
+                  fontFamily: 'Spoqa-Bold', fontSize: 30 * Factor_Height),
+            ),
           ),
-          Container(height: 10 * Factor_Height,),
+          Container(
+            height: 20 * Factor_Height,
+          ),
+          NFT.isEmpty
+              ? Container(
+            margin: EdgeInsets.symmetric(horizontal: 16.0 * Factor_Width),
+            child: Text(
+              'NFT가 존재하지 않습니다.',
+              style: TextStyle(
+                fontSize: 20 * Factor_Height,
+                fontFamily: 'Spoqa-Bold',
+                color: Color(0xFF000000),
+              ),
+            ),
+          )
+              : Container(
+            margin: EdgeInsets.symmetric(horizontal: 16.0 * Factor_Width),
+            child: Text(
+              '프로필로 사용할 NFT를 지정해주세요!',
+              style: TextStyle(
+                fontSize: 20 * Factor_Height,
+                fontFamily: 'Spoqa-Bold',
+                color: Color(0xFF000000),
+              ),
+            ),
+          ),
+          Container(height: 10 * Factor_Height),
           Container(
             margin: EdgeInsets.fromLTRB(16 * Factor_Height, 0, 0, 0),
-            height: 120*Factor_Height,
+            height: 120 * Factor_Height,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                for(int i = 0; i < NFT.length ; i++)
+                for (int i = 0;
+                i < NFT.length;
+                i++) // NFT.length 0일 때 예외처리 안해줘도 되나?
                   Container(
                     height: 120 * Factor_Height,
                     width: 120 * Factor_Height,
@@ -95,7 +137,9 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
                               ],
                             ),
                           ),
-                          Container(height: 100 * Factor_Height, width: 100 * Factor_Height,
+                          Container(
+                            height: 100 * Factor_Height,
+                            width: 100 * Factor_Height,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(6.0),
                               child: FittedBox(
@@ -110,13 +154,143 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
                           ),
                         ],
                       ),
-                      onTap: (){
-                        Selected_Image = NFT[i][3];
-                        
+                      onTap: () {
+
+                        Profile_path = NFT[i][3];
                       },
+
                     ),
                   ),
               ],
+            ),
+
+          ),
+          Container(height: 10 * Factor_Height),
+          Container(
+            height: 83 * Factor_Height, //"한줄소개"
+            child: Column(
+              children: [
+                Container(
+                    height: 28 * Factor_Height,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 16 * Factor_Width,
+                        ),
+                        Text(
+                          '한줄소개',
+                          style: TextStyle(
+                            fontSize: 20 * Factor_Height,
+                            fontFamily: 'Spoqa-Bold',
+                            color: Color(0xFF000000),
+                          ),
+                        ),
+                      ],
+                    )),
+                Container(height: 10 * Factor_Height),
+                Container(
+                    height: 18 * Factor_Height,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 16 * Factor_Width,
+                        ),
+                        Expanded(
+                          child: RichText(
+                              overflow: TextOverflow.visible,
+                              maxLines: 2,
+                              textAlign: TextAlign.start,
+                              strutStyle: StrutStyle(fontSize: 11 * Factor_Height),
+                              text: TextSpan(
+                                text: introduce!,
+                                style: TextStyle(
+                                  fontFamily: 'Spoqa-Medium',
+                                  fontSize: 17.5 * Factor_Height,
+                                  color: Color(0xFFCFCFCF),
+                                ),
+                              )
+                          ),
+                        ),
+                      ],
+                    )),
+                Container(height: 10 * Factor_Height),
+              ],
+            ),
+          ),
+          Container(height: 20 * Factor_Height),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 16.0 * Factor_Width),
+            child: Text(
+              '한줄소개 수정하기',
+              style: TextStyle(
+                fontSize: 20 * Factor_Height,
+                fontFamily: 'Spoqa-Bold',
+
+                color: Color(0xFF000000),
+              ),
+            ),
+          ),
+          Container(height: 10 * Factor_Height),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 16.0 * Factor_Width),
+            height: 60 * Factor_Height,
+            child: TextField(
+              autofocus: true,
+              //expands: true,
+              maxLength: 40,
+              style: TextStyle(fontFamily: 'Spoqa-Medium'),
+                textAlign: TextAlign.start,
+                controller: _controller,
+                decoration: InputDecoration(
+                  labelStyle: TextStyle(fontFamily: 'Spoqa-Medium'),
+                    labelText: '한줄소개 수정',
+                    hintText: introduce!, // 원래 한줄소개, 글자를 입력하면 사라짐
+                    border: OutlineInputBorder(),
+                    hintStyle: TextStyle(fontFamily: 'Spoqa-Medium'),
+                    contentPadding: EdgeInsets.all(8)),
+                onChanged: (text) {
+                  setState(() {
+                    introduce = text; //바뀔 때마다 한줄소개 저장
+                  });
+                }),
+          ),
+          Container(height: 30,),
+          Container( // '함께 뛰어들어가봅시다!' 버튼
+            height: 53 * Factor_Height,
+            child: Container(
+              width: 343 * Factor_Width,
+              child: GestureDetector(
+                onTap:()
+                {
+                  Navigator.pop(context);
+                },
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Opacity(
+                        opacity: 0.73,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xFFCD0051),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          width: 343 * Factor_Width,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        '프로필 정보 수정하기',
+                        style: TextStyle(
+                          fontSize: 17 * Factor_Width,
+                          fontFamily: 'Spoqa-Bold',
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -124,9 +298,6 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
     );
   }
 }
-
-
-
 
 class Profile_Page extends StatefulWidget {
   String? ID_Prof;
@@ -469,9 +640,9 @@ class _Profile_PageState extends State<Profile_Page>
                     sides: 6,
                     borderRadius: 15.0, // Default 0.0 degrees
                     rotate: 90.0, // Default 0.0 degrees
-                    child: introduce == '1' ? Image.asset('assets/phonix.png',
+                    child: Profile_path == '1' ? Image.asset('assets/phonix.png',
                         height: 91 * Factor_Height, width: 91 * Factor_Height)
-                    : Image.network(Selected_Image, height: 91 * Factor_Height, width: 91 * Factor_Height),
+                    : Image.network(Profile_path!, height: 91 * Factor_Height, width: 91 * Factor_Height),
                   ),
                   decoration: ShapeDecoration(
                     color: Colors.white,
@@ -525,7 +696,7 @@ class _Profile_PageState extends State<Profile_Page>
           margin: EdgeInsets.symmetric(horizontal: 18.0 * Factor_Width),
           child: Expanded(
             child: Text(
-              '안녕하세요, 개발자의 꿈을 꾸고 있는 최대현이라고 합니다!',
+              introduce!,
               style: TextStyle(
                 fontFamily: 'Spoqa-Medium',
                 fontSize: 16 * Factor_Height,
@@ -540,7 +711,7 @@ class _Profile_PageState extends State<Profile_Page>
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Profile_Edit_Page()),
+              CupertinoPageRoute(builder: (context) => Profile_Edit_Page()),
             );
           },
           child: Container(
