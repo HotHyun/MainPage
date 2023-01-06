@@ -36,6 +36,7 @@ void imagetoactinfo(String path){ //image를 눌렀을 때 그 이미지에 맞�
 
   for(int i = 0; i< allactlist.length; i++){
 
+    //print("!111111111111111");
     if(path == allactlist[i]['image_path']){
 
       var curact = allactlist[i];
