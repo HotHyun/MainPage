@@ -65,17 +65,21 @@ List<int> attentionrank = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; //관심도(참여자 
 
 void sortbyattention() {
 
+  Attention.clear();
+
   for(int i = 0; i < 10; i++){
 
     Attention.add(ParticipateList[i]+LikenumList[i]); //attention list 추가
-    print(Attention);
+
   }
+
+  print(Attention);
 
   for (int i = 0; i < Attention.length; i++) {
 
     for (int j = 0; j < Attention.length - 1; j++) {
 
-      if (Attention[j] < Attention[j+1]) { // 정렬
+      if (Attention[j] < Attention[j+1]) { // 내림차순으로 정렬
 
         int temp = attentionrank[j];
         attentionrank[j] = attentionrank[j + 1];
@@ -212,28 +216,35 @@ setimagepathlist() async{ //imagepath list를 생성하는 함수
 
 }
 
-sethotlist() {
+sethotlist() async{
+
+  Second_List.clear();
+
+  sortbyattention();
+
   for(int i = 0; i< 5; i++){
 
     Second_List.add(Build_Second_Class(Image.asset('assets/'+ImagepathList[attentionrank[i]], alignment: Alignment.center,), ImagepathList[attentionrank[i]]));
-    print(Second_List);
-
   }
+
+  print(Second_List);
+
+  return 1;
 
 }
 
 
 List<Heart_Like_Class> _Activity_Name = [
-  Heart_Like_Class('2022 e-포트폴리오 비교과활동 로드맵 제안 공모전', LikenumList[0], ParticipateList[0], false),
-  Heart_Like_Class('유니티(Unity)를 활용한 실감형 메타버스 콘텐츠 제작', LikenumList[1], ParticipateList[1], false),
-  Heart_Like_Class('[온라인 특강] 엑셀을 활용한 데이터 분석과 시각화', LikenumList[2], ParticipateList[2], false),
-  Heart_Like_Class('온라인 학습전략진단 에세이 작성', LikenumList[3], ParticipateList[3],false),
-  Heart_Like_Class('제 7회 "CCRP 공유 플랫폼" 공모전', LikenumList[4], ParticipateList[4],false),
-  Heart_Like_Class('학습윤리 캠페인 포스터 공모전', LikenumList[5], ParticipateList[5], false),
-  Heart_Like_Class('[학습워크숍] 성격유형에 따른 자기관리 전략', LikenumList[6], ParticipateList[6], false),
-  Heart_Like_Class('책 읽는 포스테키안(2022-4차)', LikenumList[7], ParticipateList[7], false),
-  Heart_Like_Class('2022-2학기 러닝커뮤니티', LikenumList[8], ParticipateList[8],false),
-  Heart_Like_Class('2022 학부생 연구프로그램', LikenumList[9], ParticipateList[9], false),
+  Heart_Like_Class('2022 학부생 연구프로그램', LikenumList[0], ParticipateList[0], false),
+  Heart_Like_Class('2022-2학기 MOOC 학점인정 신청', LikenumList[1], ParticipateList[1], false),
+  Heart_Like_Class('2022-2학기 포스텍 스마트 캠퍼스 리빙랩 활동단(1기)', LikenumList[2], ParticipateList[2], false),
+  Heart_Like_Class('달걀떨어뜨리기대회', LikenumList[3], ParticipateList[3],false),
+  Heart_Like_Class('2022년 POSTECH x CREATOR 모집', LikenumList[4], ParticipateList[4],false),
+  Heart_Like_Class('제 7회 "CCRP 공유 플랫폼" 공모전', LikenumList[5], ParticipateList[5], false),
+  Heart_Like_Class('2022-2학기 MOOC 이수비지원 신청', LikenumList[6], ParticipateList[6], false),
+  Heart_Like_Class('물리지 않는 물리 영상 공모전', LikenumList[7], ParticipateList[7], false),
+  Heart_Like_Class('MOOC 학점인정제 홍보영상 공모전', LikenumList[8], ParticipateList[8],false),
+  Heart_Like_Class('SF 창작 워크숍', LikenumList[9], ParticipateList[9], false),
 ];
 
 List<DocumentReference> _Doc_Information = [ // PAMS 활동 에 대한 DocumentReference list
@@ -458,6 +469,7 @@ class _Home_PageState extends State<Home_Page> {
     await setlikenum();
     await setimagepathlist();
     await setextralikenum();
+    await sethotlist();
     return 1;
   }
 
@@ -471,9 +483,7 @@ class _Home_PageState extends State<Home_Page> {
             if(snapshot.hasData)
             {
               print("!1111111111111111111111111111");
-              i++;
-              sortbyattention();
-              sethotlist();
+
               return ListView(
                 scrollDirection: Axis.vertical,
                 children: <Widget>[
@@ -508,9 +518,6 @@ class _Home_PageState extends State<Home_Page> {
       ),
     );
 
-    //build할 때 second_list 채워넣기
-    //혹시 안되면 futurebuild로 하는 것도 생각해봐야 할듯?
-    //print(sethotlist());
   }
 
   Widget _Build_First()
