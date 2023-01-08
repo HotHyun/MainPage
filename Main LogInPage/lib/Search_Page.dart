@@ -40,7 +40,7 @@ class PersonTile extends StatelessWidget {
           boxShadows: [
             PolygonBoxShadow(color: Colors.grey, elevation: 5.0),
           ],
-          child: user_inf[1] != '1' ? Image.network(_person.Image_Path,
+          child: _person.Image_Path != '1' ? Image.network(_person.Image_Path,
               height: 91 * Factor_Height, width: 91 * Factor_Height) : Image.asset('assets/phonix.png'),
         ),
       ),

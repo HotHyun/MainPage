@@ -146,85 +146,72 @@ class _infolisttabbarState extends State<infolisttabbar>
             print("22222222222222222222222");
             if (snapshot.hasData) {
               print("!1111111111111111111");
+
               return ListView(
                 scrollDirection: Axis.vertical,
+                shrinkWrap: true,
                 children: [
-                  Container(
-                    height: 40 * Factor_Height,
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                    ),
-                    child: TabBar(
-                      tabs: [
-                        Tab(
-                          child: Container(
-                            height: 40 * Factor_Height,
-                            alignment: Alignment.center,
-                            child: Text(
-                              '신청 가능',
-                            ),
-                          ),
-                        ),
-                        Tab(
-                          child: Container(
-                            height: 40 * Factor_Height,
-                            alignment: Alignment.center,
-                            child: Text(
-                              '신청 종료',
-                            ),
-                          ),
-                        ),
-                        Tab(
-                          child: Container(
-                            height: 40 * Factor_Height,
-                            alignment: Alignment.center,
-                            child: Text(
-                              '운영 중',
-                            ),
-                          ),
-                        ),
-                      ],
-                      indicator: BoxDecoration(),
-                      labelColor: Colors.grey,
-                      unselectedLabelColor: Colors.black,
-                      controller: _tabController,
-                    ),
-                  ),
-                  //Container(height:  * Factor_Height,),
                   Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        ListView(
+                    child: (
+                        Column(
                           // 신청 가능한 활동 리스트
-                          shrinkWrap: true,
                           children: [
-                            for (int i = 0; i < availableactlist.length; i++)
-                              Act(1, i)
-                          ],
-                        ),
-                        ListView(
-                          shrinkWrap: true,
-                          // 신청 종료된 활동 리스트
-                          children: [
-                            for (int i = 0; i < endedactlist.length; i++)
-                              Act(3, i)
-                          ],
-                        ),
-                        ListView(
-                          shrinkWrap: true,
-                          // 운영 중인 활동 리스트
 
-                          children: [
+                            Container(
+                              height: 15 * Factor_Height,
+                              child: Text(
+                                '신청 가능한 활동',
+                                style: TextStyle(
+                                  fontSize: 15 * Factor_Height,
+                                  fontFamily: 'Spoqa-Bold',
+                                  color: Color(0xFF807D7D),
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+
+                            for (int i = 0; i < availableactlist.length; i++)
+                              Act(1, i),
+
+                            Container(
+                              height: 15 * Factor_Height,
+                              child: Text(
+                                '운영 중인 활동',
+                                style: TextStyle(
+                                  fontSize: 15 * Factor_Height,
+                                  fontFamily: 'Spoqa-Bold',
+                                  color: Color(0xFF807D7D),
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+
+                            for (int i = 0; i < endedactlist.length; i++)
+                              Act(3, i),
+
+                            Container(
+                              height: 15 * Factor_Height,
+                              child: Text(
+                                '종료된 활동',
+                                style: TextStyle(
+                                  fontSize: 15 * Factor_Height,
+                                  fontFamily: 'Spoqa-Bold',
+                                  color: Color(0xFF807D7D),
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+
                             for (int i = 0; i < nowactlist.length; i++)
                               Act(2, i)
+
                           ],
-                        ),
-                      ],
-                    ),
+
+                        )),
                   ),
                 ],
               );
+
             } else if (snapshot.hasData == false) {
               return Center(
                   child: CircularProgressIndicator(color: Color(0xFFCD0051)));
@@ -370,6 +357,7 @@ class Act extends StatelessWidget {
     operation_period = '';
     image_path = '';
     PAM = 0;
+
     return; //생성만 하고 widget build 하지 않고 return
   }
 
@@ -405,7 +393,9 @@ class Act extends StatelessWidget {
       operation_period = availableactlist[idx]['operation_period'];
       image_path = availableactlist[idx]['image_path'];
       PAM = availableactlist[idx]['pam'];
-    } else if (available == 2) {
+    }
+
+    else if (available == 2) {
       // 운영 중 리스트
 
       activity_name = nowactlist[idx]['activity_name'];
@@ -418,7 +408,9 @@ class Act extends StatelessWidget {
       operation_period = nowactlist[idx]['operation_period'];
       image_path = nowactlist[idx]['image_path'];
       PAM = nowactlist[idx]['pam'];
-    } else {
+    }
+
+    else {
       // 종료된 리스트
 
       activity_name = endedactlist[idx]['activity_name'];
@@ -433,7 +425,8 @@ class Act extends StatelessWidget {
       image_path = endedactlist[idx]['image_path'];
       PAM = endedactlist[idx]['pam'];
     }
-    return;
+
+
   }
 
   @override
