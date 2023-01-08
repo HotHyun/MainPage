@@ -90,6 +90,7 @@ class actinfo extends StatefulWidget {
     thisact.email = act.email;
     thisact.participating_grade= act.participating_grade;
     thisact.operation_department = act.operation_department;
+    thisact.operation_period = act.operation_period;
     thisact.image_path = act.image_path;
     thisact.PAM = act.PAM;
 
@@ -200,7 +201,7 @@ class _actinfoState extends State<actinfo> {
                   ),
                 ),
                 Container(
-                  height: 34 * Factor_Height,
+                  height: 20 * Factor_Height,
                 ),
                 Container(
                   height: 83 * Factor_Height, //"신청 기간"
@@ -236,17 +237,13 @@ class _actinfoState extends State<actinfo> {
                                 thisact.application_period!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
-                                  color: Color(0xFFCFCFCF),
+                                  fontFamily: 'Spoqa-Medium',
+                                  color: Color(0xFF3C3C3C),
                                 ),
                               ),
                             ],
                           )),
                       Container(height: 10 * Factor_Height),
-                      Container(
-                          child:
-                          Divider(color: Color(0XFFCFCFCF), indent: 28, endIndent: 28, thickness: 2.0))
-                      ,
                     ],
                   ),
                 ),
@@ -287,16 +284,13 @@ class _actinfoState extends State<actinfo> {
                                 thisact.operation_period!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
-                                  color: Color(0xFFCFCFCF),
+                                  fontFamily: 'Spoqa-Medium',
+                                  color: Color(0xFF3C3C3C),
                                 ),
                               ),
                             ],
                           )),
                       Container(height: 10 * Factor_Height),
-                      Container(
-                          child:
-                          Divider(color: Color(0XFFCFCFCF), indent: 28, endIndent: 28, thickness: 2.0))
                     ],
                   ),
                 ),
@@ -337,16 +331,13 @@ class _actinfoState extends State<actinfo> {
                                 thisact.participating_grade!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
-                                  color: Color(0xFFCFCFCF),
+                                  fontFamily: 'Spoqa-Medium',
+                                  color: Color(0xFF3C3C3C),
                                 ),
                               ),
                             ],
                           )),
                       Container(height: 10 * Factor_Height),
-                      Container(
-                          child:
-                          Divider(color: Color(0XFFCFCFCF), indent: 28, endIndent: 28, thickness: 2.0))
                     ],
                   ),
                 ),
@@ -387,16 +378,13 @@ class _actinfoState extends State<actinfo> {
                                 thisact.operation_department!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
-                                  color: Color(0xFFCFCFCF),
+                                  fontFamily: 'Spoqa-Medium',
+                                  color: Color(0xFF3C3C3C),
                                 ),
                               ),
                             ],
                           )),
                       Container(height: 10 * Factor_Height),
-                      Container(
-                          child:
-                          Divider(color: Color(0XFFCFCFCF), indent: 28, endIndent: 28, thickness: 2.0))
                     ],
                   ),
                 ),
@@ -437,7 +425,7 @@ class _actinfoState extends State<actinfo> {
                                 '054-279-9002',
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
+                                  fontFamily: 'Spoqa-Medium',
                                   color: Color(0xFFCFCFCF),
                                 ),
                               ),
@@ -477,7 +465,7 @@ class _actinfoState extends State<actinfo> {
                           )),
                       Container(height: 10 * Factor_Height),
                       Container(
-                          height: 18 * Factor_Height,
+                          height: 22 * Factor_Height,
                           child: Row(
                             children: [
                               Container(
@@ -488,16 +476,13 @@ class _actinfoState extends State<actinfo> {
                                 thisact.email!,
                                 style: TextStyle(
                                   fontSize: 17.5 * Factor_Height,
-                                  fontFamily: 'Spoqa-Regular',
-                                  color: Color(0xFFCFCFCF),
+                                  fontFamily: 'Spoqa-Medium',
+                                  color: Color(0xFF3C3C3C),
                                 ),
                               ),
                             ],
                           )),
                       Container(height: 10 * Factor_Height),
-                      Container(
-                          child:
-                          Divider(color: Color(0XFFCFCFCF), indent: 28, endIndent: 28, thickness: 2.0))
                     ],
                   ),
                 ),
@@ -511,7 +496,7 @@ class _actinfoState extends State<actinfo> {
                     width: 300 * Factor_Width,
                     child: GestureDetector(
                       onTap: () {
-                        // 누르면 신청하는 페이지로 넘어가게
+                        launchUrlString("https://pams.postech.ac.kr/postech/client/index.do");
                       },
                       child: Stack(
                         children: [

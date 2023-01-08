@@ -130,6 +130,7 @@ class _FirstPageState extends State<FirstPage>
       print(URIList[i]); // attr 이라는 변수에 저장을 한다며
       print(IdList[i]);
     }
+    return 1;
   }
 
   _asyncMethod() async
@@ -160,6 +161,7 @@ class _FirstPageState extends State<FirstPage>
                     (context) => LogInPage()));
         });
       }
+    return 1;
   }
 
   @override

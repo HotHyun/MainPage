@@ -61,7 +61,7 @@ class Build_Fifth_Class
   Build_Fifth_Class(this.ImagePath);
 }
 
-List<int> attentionrank = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; //관심도(참여자 + 좋아요 수) 순으로 인덱스를 정렬하는 리스트
+List<int> attentionrank = []; //관심도(참여자 + 좋아요 수) 순으로 인덱스를 정렬하는 리스트
 
 void sortbyattention() {
 
@@ -75,20 +75,77 @@ void sortbyattention() {
 
   print(Attention);
 
-  for (int i = 0; i < Attention.length; i++) {
+  List<int> tempattention = [];
+  tempattention.addAll(Attention);
 
-    for (int j = 0; j < Attention.length - 1; j++) {
+  for (int i = 0; i < 10; i++) {
 
-      if (Attention[j] < Attention[j+1]) { // 내림차순으로 정렬
+    for (int j = 0; j < 9 - i ; j++) {
 
-        int temp = attentionrank[j];
-        attentionrank[j] = attentionrank[j + 1];
-        attentionrank[j + 1] = temp;
+      if (Attention[j] < Attention[j + 1]) { // 내림차순으로 정렬
+
+        int temp = Attention[j];
+        Attention[j] = Attention[j + 1];
+        Attention[j + 1] = temp;
 
       }
 
     }
   }
+
+  int first = Attention[0];
+  int second = Attention[1];
+  int third = Attention[2];
+  int fourth = Attention[3];
+  int fifth = Attention[4];
+
+  for(int j = 0; j < tempattention.length; j++){
+
+    if (first == tempattention[j]) {
+
+      attentionrank.add(j);
+      break;
+    }
+  }
+
+  for(int j = 0; j < tempattention.length; j++){
+
+    if (second == tempattention[j] && !attentionrank.contains(j)) {
+
+      attentionrank.add(j);
+      break;
+    }
+  }
+
+  for(int j = 0; j < tempattention.length; j++){
+
+    if (third == tempattention[j] && !attentionrank.contains(j)) {
+
+      attentionrank.add(j);
+      break;
+    }
+  }
+
+  for(int j = 0; j < tempattention.length; j++){
+
+    if (fourth == tempattention[j] && !attentionrank.contains(j)) {
+
+      attentionrank.add(j);
+      break;
+    }
+  }
+
+  for(int j = 0; j < tempattention.length; j++){
+
+    if (fifth == tempattention[j] && !attentionrank.contains(j)) {
+
+      attentionrank.add(j);
+      break;
+    }
+  }
+
+
+
 }
 
 class Heart_Like_Class
