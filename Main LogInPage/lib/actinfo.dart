@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'infolist.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/cupertino.dart';
 
 Act thisact = Act.def(); //default 생성자로 생성
+extraAct thisextraact = extraAct.def();
 
 class MyApp extends StatelessWidget
 {
@@ -30,14 +34,15 @@ class MyApp extends StatelessWidget
 }
 
 
-void imagetoactinfo(String path){ //image를 눌렀을 때 그 이미지에 맞는 actinfo를 가져오는 함수
+void imagetoactinfo(String path, BuildContext context){ //image를 눌렀을 때 그 이미지에 맞는 actinfo를 가져오는 함수
 
   var tempact = Act.def();
 
-  for(int i = 0; i< allactlist.length; i++){
+  if(allactlist.length==0) makeactlist(); // allactlist가 만들어지기 전에 함수를 호출한 경우 for문이 안돌아감
 
-    //print("!111111111111111");
-    if(path == allactlist[i]['image_path']){
+  for(int i = 0; i < allactlist.length; i++){
+
+    if(path == allactlist[i]['image_path']){ //imagepath 같으면
 
       var curact = allactlist[i];
 
@@ -50,54 +55,33 @@ void imagetoactinfo(String path){ //image를 눌렀을 때 그 이미지에 맞�
       tempact.operation_department = curact['operation_department'];
       tempact.operation_period = curact['operation_period'];
       tempact.image_path = curact['image_path'];
-      tempact.PAM = int.parse(curact['pam']);
+      tempact.PAM = curact['pam'];
 
       break;
 
     }
 
-
   }
-  Act.copy(tempact); //복사 생성자 호출 및 widget 빌드
+
+  Navigator.push(
+      context,
+      CupertinoPageRoute(builder:
+          (context) => actinfo(tempact)));
+
+
+  //복사 생성자 호출 및 widget 빌드
+
+  return;
 
 }
 
 
 class actinfo extends StatefulWidget {
 
-  //class 안에 불필요하게 act를 다 집어넣는것보다는, 전역변수로 thisact 변수를 선언해서 이를 활용하는 방식이 나을 듯. 그렇게 수정했음 (아래는 수정 전 버전임)
 
-  /*
-  String? activity_name; //활동 유형
-  String? application_available; //활동 이름
-  String? application_period; //시작 날짜
-  String? category;
-  String? email;
-  String? participating_grade;
-  String? operation_department;
-  String? operation_period;
-  String? image_path;
-  int? PAM;
-
-  */
 
   actinfo(Act act){ //값 넣어주기
 
-    /*
-
-    this.activity_name = act.activity_name;
-    this.application_available = act.application_available;
-    this.application_period = act.application_period;
-    this.category= act.category;
-    this.email = act.email;
-    this.participating_grade= act.participating_grade;
-    this.operation_department = act.operation_department;
-    this.image_path = act.image_path;
-    this.PAM = act.PAM;
-
-     */
-
-    //act 값을 가져와서 전역변수 thisact를 initialize 해줌
 
     thisact.activity_name = act.activity_name;
     thisact.application_available = act.application_available;
@@ -149,22 +133,6 @@ class _actinfoState extends State<actinfo> {
             fontFamily: 'Spoqa-Medium',
           ),
         ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              MyApp.themeNotifier.value =
-              MyApp.themeNotifier.value == ThemeMode.light
-                  ? ThemeMode.dark
-                  : ThemeMode.light;
-            },
-            icon: Icon(
-              MyApp.themeNotifier.value == ThemeMode.light
-                  ? Icons.dark_mode
-                  : Icons.light_mode,
-              color: Colors.white,
-            ),
-          ),
-        ],
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
@@ -210,7 +178,7 @@ class _actinfoState extends State<actinfo> {
                   height: 254 * Factor_Height,
                   child: Image.asset(
                     //this.widget.image_path!,
-                    thisact.image_path!,
+                    'assets/'+thisact.image_path!,
                     height: 254 * Factor_Height,
                     width: 296 * Factor_Width,
                   ),
@@ -576,6 +544,213 @@ class _actinfoState extends State<actinfo> {
                 ),
                 Container(
                   height: 33 * Factor_Height,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+
+      //  ),
+    );
+  }
+}
+
+class extrainfo extends StatefulWidget {
+
+
+  extrainfo(extraAct act){ //값 넣어주기
+
+    thisextraact.activity_name = act.activity_name;
+    thisextraact.application_link = act.application_link;
+    thisextraact.detail_link = act.detail_link;
+    thisextraact.image_path= act.image_path;
+
+  }
+
+  @override
+  _extrainfoState createState() => _extrainfoState();
+}
+
+class _extrainfoState extends State<extrainfo> {
+
+  @override
+  Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final standardDeviceWidth = 375;
+    final Factor_Width = deviceWidth / standardDeviceWidth;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final standardDeviceHeight = 812;
+    final Factor_Height = deviceHeight / standardDeviceHeight;
+    return Scaffold(
+
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0, //버튼 - default 옵션으로 pop하게
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: AlignmentDirectional.center,
+              end: Alignment.bottomRight,
+              colors: const <Color>[
+                Color.fromRGBO(205, 0, 81, 0.6),
+                Color.fromRGBO(205, 0, 81, 0.8),
+              ],
+            ),
+          ),
+        ),
+        title: Text(
+          'PAM+NET',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Spoqa-Medium',
+          ),
+        ),
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        //child:Expanded(
+        child: ListView(
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+
+                Container(
+                  height: 26 * Factor_Height,
+                ),
+                Container(
+                  // # 진행중  #공모전/대회
+                  height: 30 * Factor_Height,
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                          width: Factor_Width * 33
+                      ),
+                      Text(
+                        '#창업 & 공모전',
+                        style: TextStyle(
+                          fontSize: 25.5 * Factor_Height,
+                          fontFamily: 'Spoqa-Bold',
+                          color: Color(0xFF3C3C3C),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 17 * Factor_Height,
+                ),
+                Container(
+                  //활동 사진 들어갈 곳
+                  height: 254 * Factor_Height,
+                  child: Image.asset(
+                    'assets/'+thisextraact.image_path!,
+                    height: 254 * Factor_Height,
+                    width: 296 * Factor_Width,
+                  ),
+                ),
+                Container(
+                  height: 10 * Factor_Height,
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 37.5 * Factor_Width),
+                  height: 80 * Factor_Height,
+                  child: Text(
+                    thisextraact.activity_name!,
+                    style: TextStyle(
+                      fontSize: 32 * Factor_Height,
+                      fontFamily: 'Spoqa-Bold',
+                      color: Color(0xFF3C3C3C),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Container(
+                  height: 40 * Factor_Height,
+                ),
+                Container(
+                  // 상세정보 확인 버튼
+                  height: 53 * Factor_Height,
+                  child: Container(
+                    width: 300 * Factor_Width,
+                    child: GestureDetector(
+                      onTap: () {
+                        launchUrlString(thisextraact.detail_link!);
+                      },
+                      child: Stack(
+                        children: [
+                          Center(
+                            child: Opacity(
+                              opacity: 0.73,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFCD0051),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                width: 300 * Factor_Width,
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              '더 자세히 알아보기 ',
+                              style: TextStyle(
+                                fontSize: 17 * Factor_Width,
+                                fontFamily: 'Spoqa-Bold',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 33 * Factor_Height,
+                ),
+                Container(
+                  // '지원하러 가기' 버튼
+                  height: 53 * Factor_Height,
+                  child: Container(
+                    width: 300 * Factor_Width,
+                    child: GestureDetector(
+                      onTap: () {
+                        launchUrlString(thisextraact.application_link!);
+                      },
+                      child: Stack(
+                        children: [
+                          Center(
+                            child: Opacity(
+                              opacity: 0.73,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFCD0051),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                width: 300 * Factor_Width,
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              '지원하러 가기',
+                              style: TextStyle(
+                                fontSize: 17 * Factor_Width,
+                                fontFamily: 'Spoqa-Bold',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

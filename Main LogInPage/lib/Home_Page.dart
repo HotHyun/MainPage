@@ -13,8 +13,6 @@ Future<dynamic>? future_likenum;
 
 int i = 0;
 
-
-
 class AppController extends GetxController { // 푸시 알람
   static AppController get to => Get.find();
 
@@ -641,16 +639,6 @@ class _Home_PageState extends State<Home_Page> {
                 child: Image.asset('assets/Home_Page_Fire.png'),
               ),
               Spacer(),
-              Container(
-                width: 19 * Factor_Width,
-                child: GestureDetector
-                  (
-                  child: Image.asset('assets/Home_Page_Arrow.png'),
-                  onTap: (){
-
-                  },
-                ),
-              ),
             ],
           ),
         ),
@@ -676,36 +664,36 @@ class _Home_PageState extends State<Home_Page> {
                   return Container(
                     //margin: EdgeInsets.symmetric(horizontal: 24.0 * Factor_Width),
                     //width: MediaQuery.of(context).size.width,
-                    child: GestureDetector( //프로필 편집 버튼
+                    child: GestureDetector(
                       onTap: () {
                         //print("111111111111111111");
-                        imagetoactinfo(Second_List[i].path!);
+                        imagetoactinfo(Second_List[i].path!, context);
                       },
                       child: Container(
                         height: 30 * Factor_Height,
                         margin: EdgeInsets.symmetric(horizontal: 18.0 * Factor_Width),
                         child: Stack(
-                          children: [
-                            Container(child: Container(child: Image.asset('assets/'+Second_List[i].path!, fit: BoxFit.fill,),),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6.0),
+                            children: [
+                              Container(child: Container(child: Image.asset('assets/'+Second_List[i].path!, fit: BoxFit.fill,),),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6.0),
+                                ),
                               ),
-                            ),
-                            Container(child: Container(child: Image.asset('assets/'+Second_List[i].path!, fit: BoxFit.fill,),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(0, 0, 0, 0.25),
-                                    offset: Offset(3.0, 3.0), //(x,y)
-                                    blurRadius: 4.0,
-                                  ),
-                                ],
+                              Container(child: Container(child: Image.asset('assets/'+Second_List[i].path!, fit: BoxFit.fill,),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, 0.25),
+                                      offset: Offset(3.0, 3.0), //(x,y)
+                                      blurRadius: 4.0,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            ),
-                    ]
-                          ),
+                              ),
+                            ]
+                        ),
                       ),
                     ),
                   );
@@ -2265,6 +2253,11 @@ class _Home_PageState extends State<Home_Page> {
                   (
                   child: Image.asset('assets/Home_Page_Arrow.png'),
                   onTap: (){
+
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(builder:
+                            (context) => extralisttabbar()));
 
                   },
                 ),

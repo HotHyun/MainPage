@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:polygon_clipper/polygon_clipper.dart';
 import 'package:polygon_clipper/polygon_border.dart';
-//import 'Profile_Edit_Page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
@@ -17,12 +16,10 @@ Future<dynamic>? future_activity;
 String? username;
 String? grade;
 String? major;
-//String? id;
 String? state;
 String? major_image;
 String? URL;
 String? NickName_Split;
-//String? NickName = '';
 String? Profile_path = '1';
 String? introduce = '';
 
@@ -38,10 +35,28 @@ List<dynamic> vnamelist = [] as List<dynamic>;
 List<dynamic> extraact = [] as List<dynamic>;
 List<dynamic> enamelist = [] as List<dynamic>;
 
+List<dynamic> user_inf = [] as List<dynamic>;
+
 List<List<dynamic>> NFT = [];
 List<List<dynamic>> NFT_In = [];
 
 List<bool> NFT_Like_Check = [];
+
+setinfo() async {
+
+  final storage = FlutterSecureStorage();
+  String? userInfo = await storage.read(key: "login");
+  URL = userInfo!.split(" ")[1];
+  var userdb = await FirebaseFirestore.instance.collection('users').doc(URL);
+
+  await userdb.collection('Profile').doc('Profile_path').update({
+    "Profile_path" : user_inf[1],
+  });
+
+  await userdb.collection('Profile').doc('introduce').update({
+    "introduce" : user_inf[2],
+  });
+}
 
 class Profile_Edit_Page extends StatefulWidget {
   const Profile_Edit_Page({Key? key}) : super(key: key);
@@ -64,7 +79,10 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
     final standardDeviceHeight = 812;
     final Factor_Height = deviceHeight / standardDeviceHeight;
 
-    if(introduce == '') introduce = '한줄소개가 없습니다.';
+    print(user_inf[1]);
+    print(user_inf[2]);
+
+    if(user_inf[2] == '') user_inf[2] = '한줄소개가 없습니다.';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -156,7 +174,7 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
                       ),
                       onTap: () {
 
-                        Profile_path = NFT[i][3];
+                        user_inf[1] = NFT[i][3];
                       },
 
                     ),
@@ -202,7 +220,7 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
                               textAlign: TextAlign.start,
                               strutStyle: StrutStyle(fontSize: 11 * Factor_Height),
                               text: TextSpan(
-                                text: introduce!,
+                                text: user_inf[2],
                                 style: TextStyle(
                                   fontFamily: 'Spoqa-Medium',
                                   fontSize: 17.5 * Factor_Height,
@@ -235,22 +253,22 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
             margin: EdgeInsets.symmetric(horizontal: 16.0 * Factor_Width),
             height: 60 * Factor_Height,
             child: TextField(
-              autofocus: true,
-              //expands: true,
-              maxLength: 40,
-              style: TextStyle(fontFamily: 'Spoqa-Medium'),
+                autofocus: true,
+                //expands: true,
+                maxLength: 40,
+                style: TextStyle(fontFamily: 'Spoqa-Medium'),
                 textAlign: TextAlign.start,
                 controller: _controller,
                 decoration: InputDecoration(
-                  labelStyle: TextStyle(fontFamily: 'Spoqa-Medium'),
+                    labelStyle: TextStyle(fontFamily: 'Spoqa-Medium'),
                     labelText: '한줄소개 수정',
-                    hintText: introduce!, // 원래 한줄소개, 글자를 입력하면 사라짐
+                    hintText: user_inf[2]!, // 원래 한줄소개, 글자를 입력하면 사라짐
                     border: OutlineInputBorder(),
                     hintStyle: TextStyle(fontFamily: 'Spoqa-Medium'),
                     contentPadding: EdgeInsets.all(8)),
                 onChanged: (text) {
                   setState(() {
-                    introduce = text; //바뀔 때마다 한줄소개 저장
+                    user_inf[2] = text; //바뀔 때마다 한줄소개 저장
                   });
                 }),
           ),
@@ -262,6 +280,7 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
               child: GestureDetector(
                 onTap:()
                 {
+                  setinfo(); // setinfo 함수 호출로 정보 firebase에 설정
                   Navigator.pop(context);
                 },
                 child: Stack(
@@ -302,7 +321,9 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
 class Profile_Page extends StatefulWidget {
   String? ID_Prof;
   String? Nick;
-  Profile_Page({this.ID_Prof, this.Nick});
+  String? path;
+  String? introduce;
+  Profile_Page({this.ID_Prof, this.Nick, this.path, this.introduce});
 
   @override
   State<Profile_Page> createState() => _Profile_PageState();
@@ -356,11 +377,15 @@ class _Profile_PageState extends State<Profile_Page>
 
     print(widget.ID_Prof);
     print(widget.Nick);
+    print(widget.path);
+    print(widget.introduce);
 
-    if(widget.ID_Prof != null && widget.Nick != null)
+    if(widget.ID_Prof != null && widget.Nick != null && widget.path != null && widget.introduce != null)
     {
       URL = widget.ID_Prof;
       NickName_Split = widget.Nick;
+      user_inf[1] = widget.path;
+      user_inf[2] = widget.introduce;
     }
 
     var docsnapshot = await FirebaseFirestore.instance.collection('users').doc(URL).get(); //하태혁의 주소
@@ -415,6 +440,13 @@ class _Profile_PageState extends State<Profile_Page>
       default:
         major_image = 'assets/postech_mej.png';
     }
+
+    var user_Inf_list = await FirebaseFirestore.instance.collection('users').doc(URL).collection('Profile').get();
+
+    for(int i = 0; i < user_Inf_list.docs.length; i++)
+      {
+        user_inf.add(user_Inf_list.docs[i].data().values.elementAt(0));
+      }
 
     var schoolactlist = await FirebaseFirestore.instance.collection('users').doc(URL).collection('schoolAct').get();
 
@@ -489,7 +521,7 @@ class _Profile_PageState extends State<Profile_Page>
       });
       Out.add(temp['name']);
       Out.add(temp['like_num']);
-      Out.add(temp['detail']);
+      Out.add(temp['kind']);
       Out.add(temp['image']);
       Out.add(temp['is_Checked']);
       In.add(temp['name']);
@@ -551,33 +583,33 @@ class _Profile_PageState extends State<Profile_Page>
 
     return Scaffold(
       body: FutureBuilder<dynamic>(
-        future: future_activity,
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if(snapshot.hasData)
-          {
-            return ListView(
-              scrollDirection: Axis.vertical,
-              children: <Widget>[
-                _Build_First(),
-                MajorandID(),
-                Career(),
-                NFT_Page(),
-              ],
-            );
-          }
-          else if(snapshot.hasData == false)
+          future: future_activity,
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if(snapshot.hasData)
+            {
+              return ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  _Build_First(),
+                  MajorandID(),
+                  Career(),
+                  NFT_Page(),
+                ],
+              );
+            }
+            else if(snapshot.hasData == false)
             {
               return Center(child: CircularProgressIndicator(color: Color(0xFFCD0051)));
             }
-          else if(snapshot.hasError)
+            else if(snapshot.hasError)
             {
               return Center(child: CircularProgressIndicator());
             }
-          else
+            else
             {
               return Center(child: CircularProgressIndicator());
             }
-        }
+          }
       ),
     );
 
@@ -640,9 +672,9 @@ class _Profile_PageState extends State<Profile_Page>
                     sides: 6,
                     borderRadius: 15.0, // Default 0.0 degrees
                     rotate: 90.0, // Default 0.0 degrees
-                    child: Profile_path == '1' ? Image.asset('assets/phonix.png',
+                    child: user_inf[1] == '1' ? Image.asset('assets/phonix.png',
                         height: 91 * Factor_Height, width: 91 * Factor_Height)
-                    : Image.network(Profile_path!, height: 91 * Factor_Height, width: 91 * Factor_Height),
+                        : Image.network(user_inf[1]!, height: 91 * Factor_Height, width: 91 * Factor_Height),
                   ),
                   decoration: ShapeDecoration(
                     color: Colors.white,
@@ -696,7 +728,7 @@ class _Profile_PageState extends State<Profile_Page>
           margin: EdgeInsets.symmetric(horizontal: 18.0 * Factor_Width),
           child: Expanded(
             child: Text(
-              introduce!,
+              user_inf[2]!,
               style: TextStyle(
                 fontFamily: 'Spoqa-Medium',
                 fontSize: 16 * Factor_Height,
@@ -885,179 +917,179 @@ class _Profile_PageState extends State<Profile_Page>
       //shrinkWrap: true,
       children: [
         for(int i = 0 ; i < length ~/ 2 ; i++)
-        Row(
-        children: [
-          Column(
-            children: [
-              GestureDetector(
-                child: Stack(
+          Row(
+              children: [
+                Column(
                   children: [
-                    Container(
-                      height: 163 * Factor_Height,
-                      width: 163 * Factor_Height,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(6.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.25),
-                            offset: Offset(0.0, 4.0), //(x,y)
-                            blurRadius: 4.0,
+                    GestureDetector(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 163 * Factor_Height,
+                            width: 163 * Factor_Height,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  offset: Offset(0.0, 4.0), //(x,y)
+                                  blurRadius: 4.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(height: 163 * Factor_Height, width: 163 * Factor_Height,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(6.0),
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: Image.network(NFT[2*i][3]),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              border: Border.all(color: Color(0xFFD4D4D4)),
+                            ),
                           ),
                         ],
                       ),
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(builder:
+                                (context) => Profile_Exactly_Page(NFT_In[2*i][11], 2*i)));
+                      },
                     ),
-                    Container(height: 163 * Factor_Height, width: 163 * Factor_Height,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6.0),
-                        child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.network(NFT[2*i][3]),
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6.0),
-                        border: Border.all(color: Color(0xFFD4D4D4)),
-                      ),
-                    ),
-                  ],
-                ),
-                onTap: (){
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(builder:
-                          (context) => Profile_Exactly_Page(NFT_In[2*i][11], 2*i)));
-                },
-              ),
-              Container(height: 5*Factor_Height),
-              Container(
-                width: 163 * Factor_Height,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(NFT[2*i][0], style: TextStyle(fontSize: 12, fontFamily: 'Spoqa-Bold'),),
-                        Text(NFT[2*i][2], style: TextStyle(fontSize: 11, fontFamily: 'Spoqa-Medium', color: Colors.grey),)
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      children: [
-                        StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').snapshots(),
-                            builder: (context, snapshot) {
-                              return GestureDetector(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 16 * Factor_Height,
-                                      height: 15 * Factor_Height,
-                                      child: Image.asset('assets/heart (2).png')
-                                    ),
-                                    Text(NFT[2*i][1].toString(), style: TextStyle(fontSize: 10, fontFamily: 'Spoqa-Medium'),)
-                                  ],
-                                ),
-                                onTap: () => _add_Heart_Num(2*i),
-                              );
-                            }
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(height: 10 * Factor_Height),
-            ],
-          ),
-          Spacer(),
-          Column(
-            children: [
-              GestureDetector(
-                child: Stack(
-                  children: [
+                    Container(height: 5*Factor_Height),
                     Container(
-                      height: 163 * Factor_Height,
                       width: 163 * Factor_Height,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(6.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.25),
-                            offset: Offset(0.0, 4.0), //(x,y)
-                            blurRadius: 4.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(NFT[2*i][0], style: TextStyle(fontSize: 12, fontFamily: 'Spoqa-Bold'),),
+                              Text(NFT[2*i][2], style: TextStyle(fontSize: 11, fontFamily: 'Spoqa-Medium', color: Colors.grey),)
+                            ],
                           ),
+                          Spacer(),
+                          Column(
+                            children: [
+                              StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').snapshots(),
+                                  builder: (context, snapshot) {
+                                    return GestureDetector(
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                              width: 16 * Factor_Height,
+                                              height: 15 * Factor_Height,
+                                              child: Image.asset('assets/heart (2).png')
+                                          ),
+                                          Text(NFT[2*i][1].toString(), style: TextStyle(fontSize: 10, fontFamily: 'Spoqa-Medium'),)
+                                        ],
+                                      ),
+                                      onTap: () => _add_Heart_Num(2*i),
+                                    );
+                                  }
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
-                    Container(height: 163 * Factor_Height, width: 163 * Factor_Height,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6.0),
-                        child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.network(NFT[2*i+1][3]),
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6.0),
-                        border: Border.all(color: Color(0xFFD4D4D4)),
-                      ),
-                    ),
+                    Container(height: 10 * Factor_Height),
                   ],
                 ),
-                onTap: (){
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(builder:
-                          (context) => Profile_Exactly_Page(NFT_In[2*i+1][11], 2*i+1)));
-                },
-              ),
-              Container(height: 5*Factor_Height),
-              Container(
-                width: 163 * Factor_Height,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                Spacer(),
+                Column(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(NFT[2*i+1][0], style: TextStyle(fontSize: 12, fontFamily: 'Spoqa-Bold'),),
-                        Text(NFT[2*i+1][2], style: TextStyle(fontSize: 11, fontFamily: 'Spoqa-Medium', color: Colors.grey),)
-                      ],
-                    ),
-                    Spacer(),
-                    Column(
-                      children: [
-                        StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').snapshots(),
-                            builder: (context, snapshot) {
-                              return GestureDetector(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 16 * Factor_Height,
-                                      height: 15 * Factor_Height,
-                                      child: Image.asset('assets/heart (2).png') //: Image.asset('assets/heart (1).png'),
-                                    ),
-                                    Text(NFT[2*i+1][1].toString(), style: TextStyle(fontSize: 10, fontFamily: 'Spoqa-Medium'),)
-                                  ],
+                    GestureDetector(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 163 * Factor_Height,
+                            width: 163 * Factor_Height,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  offset: Offset(0.0, 4.0), //(x,y)
+                                  blurRadius: 4.0,
                                 ),
-                                onTap: () => _add_Heart_Num(2*i + 1),
-                              );
-                            }
-                        ),
-                      ],
-                    )
+                              ],
+                            ),
+                          ),
+                          Container(height: 163 * Factor_Height, width: 163 * Factor_Height,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(6.0),
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: Image.network(NFT[2*i+1][3]),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              border: Border.all(color: Color(0xFFD4D4D4)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(builder:
+                                (context) => Profile_Exactly_Page(NFT_In[2*i+1][11], 2*i+1)));
+                      },
+                    ),
+                    Container(height: 5*Factor_Height),
+                    Container(
+                      width: 163 * Factor_Height,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(NFT[2*i+1][0], style: TextStyle(fontSize: 12, fontFamily: 'Spoqa-Bold'),),
+                              Text(NFT[2*i+1][2], style: TextStyle(fontSize: 11, fontFamily: 'Spoqa-Medium', color: Colors.grey),)
+                            ],
+                          ),
+                          Spacer(),
+                          Column(
+                            children: [
+                              StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').snapshots(),
+                                  builder: (context, snapshot) {
+                                    return GestureDetector(
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                              width: 16 * Factor_Height,
+                                              height: 15 * Factor_Height,
+                                              child: Image.asset('assets/heart (2).png') //: Image.asset('assets/heart (1).png'),
+                                          ),
+                                          Text(NFT[2*i+1][1].toString(), style: TextStyle(fontSize: 10, fontFamily: 'Spoqa-Medium'),)
+                                        ],
+                                      ),
+                                      onTap: () => _add_Heart_Num(2*i + 1),
+                                    );
+                                  }
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(height: 10 * Factor_Height),
                   ],
                 ),
-              ),
-              Container(height: 10 * Factor_Height),
-            ],
+              ]
           ),
-        ]
-        ),
 
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1584,13 +1616,13 @@ class _Profile_Exactly_PageState extends State<Profile_Exactly_Page> {
 
     return ScaffoldGradientBackground(
       gradient: LinearGradient(
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-        colors: [
-          Colors.white,
-          Colors.pinkAccent,
-        ],
-        stops: [0.49, 0.8]
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          colors: [
+            Colors.white,
+            Colors.pinkAccent,
+          ],
+          stops: [0.49, 0.8]
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -1631,7 +1663,7 @@ class _Profile_Exactly_PageState extends State<Profile_Exactly_Page> {
           ),
           Container(height: 25 * Factor_Height),
           Text(NFT[widget.i][0], style: TextStyle(fontFamily: 'Spoqa-Bold', fontSize: 30 * Factor_Height),),
-          Text(NFT[widget.i][2], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 22 * Factor_Height, color: Colors.grey),),
+          Text(NFT_In[widget.i][8], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 22 * Factor_Height, color: Colors.grey),),
           Container(height: 5 * Factor_Height),
           Icon(Icons.favorite, color: Colors.red, size: 23 * Factor_Height,),
           Text(NFT[widget.i][1].toString(), style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 14 * Factor_Height),),
@@ -1653,7 +1685,7 @@ class _Profile_Exactly_PageState extends State<Profile_Exactly_Page> {
           Container(height: 25 * Factor_Height),
           Text('NFT-ID: '+NFT_In[widget.i][11], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
           Container(height: 2 * Factor_Height),
-          Text('kind: '+NFT_In[widget.i][8], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
+          Text('detail: '+NFT_In[widget.i][2], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
           Container(height: 2 * Factor_Height),
           Text('prize: '+NFT_In[widget.i][9], style: TextStyle(fontFamily: 'Spoqa-Medium', fontSize: 18 * Factor_Height),),
           Container(height: 2 * Factor_Height),
@@ -1667,5 +1699,3 @@ class _Profile_Exactly_PageState extends State<Profile_Exactly_Page> {
     );
   }
 }
-
-

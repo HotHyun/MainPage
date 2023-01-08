@@ -116,14 +116,6 @@ class _FirstPageState extends State<FirstPage>
 
   _asyncMethod_Total_1() async
   {
-    userInfo = await storage.read(key: "login");
-    ID = await storage.read(key: "MetaMask");
-    NickName = await storage.read(key: "NickName");
-    is_Finish = await storage.read(key: "is_Finish");
-    print(userInfo);
-    print(ID);
-    print(NickName);
-    print(is_Finish);
 
     print("!111111111111111111");
     await getIdsbyOwner(ID!.split(" ")[1]); // IDList에다가 값 집어넣기
@@ -142,6 +134,14 @@ class _FirstPageState extends State<FirstPage>
 
   _asyncMethod() async
   {
+    userInfo = await storage.read(key: "login");
+    ID = await storage.read(key: "MetaMask");
+    NickName = await storage.read(key: "NickName");
+    is_Finish = await storage.read(key: "is_Finish");
+    print(userInfo);
+    print(ID);
+    print(NickName);
+    print(is_Finish);
     if((userInfo != null) && (ID != null) && (NickName != null) && (is_Finish != null))
     {
       await _asyncMethod_Total_1();

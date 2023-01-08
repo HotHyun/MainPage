@@ -40,8 +40,8 @@ class PersonTile extends StatelessWidget {
           boxShadows: [
             PolygonBoxShadow(color: Colors.grey, elevation: 5.0),
           ],
-          child: Image.asset(_person.Image_Path,
-              height: 91 * Factor_Height, width: 91 * Factor_Height),
+          child: user_inf[1] != '1' ? Image.network(_person.Image_Path,
+              height: 91 * Factor_Height, width: 91 * Factor_Height) : Image.asset('assets/phonix.png'),
         ),
       ),
       title: Text(_person.name),
@@ -92,7 +92,7 @@ class _Search_PageState extends State<Search_Page> {
                 if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[2]))
                 {
                   List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
-                    , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
+                    , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0), Profile_Act.docs[1].data().values.elementAt(0), Profile_Act.docs[2].data().values.elementAt(0)];
                   Profile_Information.add(Personal);
                   print(Profile_Information);
                   continue;
@@ -102,7 +102,7 @@ class _Search_PageState extends State<Search_Page> {
                   continue;
                 }
                 List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
-                  , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
+                  , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0), Profile_Act.docs[1].data().values.elementAt(0), Profile_Act.docs[2].data().values.elementAt(0)];
                 Profile_Information.add(Personal);
                 print(Profile_Information);
                 continue;
@@ -112,7 +112,7 @@ class _Search_PageState extends State<Search_Page> {
                 continue;
               }
               List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
-                , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0)];
+                , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0), Profile_Act.docs[1].data().values.elementAt(0), Profile_Act.docs[2].data().values.elementAt(0)];
               Profile_Information.add(Personal);
               print(Profile_Information);
               continue;
@@ -189,14 +189,14 @@ class _Search_PageState extends State<Search_Page> {
                 for (int i = 0; i < Profile_Information.length; i++)
                   GestureDetector(
                     child: PersonTile(
-                      Person(Profile_Information[i][0], Profile_Information[i][1], 'assets/NFT_1.png', Profile_Information[i][2])
+                      Person(Profile_Information[i][0], Profile_Information[i][1], Profile_Information[i][4], Profile_Information[i][2])
                     ),
                     onTap: ()
                     {
                       Navigator.push(
                           context,
                           CupertinoPageRoute(builder:
-                              (context) => Profile_Page(ID_Prof: Profile_Information[i][2], Nick: Profile_Information[i][3],)));
+                              (context) => Profile_Page(ID_Prof: Profile_Information[i][2], Nick: Profile_Information[i][3], path: Profile_Information[i][4], introduce: Profile_Information[i][5],)));
                     },
                   ),
               ],
