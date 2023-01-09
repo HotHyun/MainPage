@@ -192,6 +192,7 @@ class _LogInPageState extends State<LogInPage>
                     Container(
                       width: 200 * Factor_Width,
                       child: TextField(
+                        //autofocus: true,
                         controller: _NextController1,
                         decoration: InputDecoration(
                           enabledBorder: UnderlineInputBorder(

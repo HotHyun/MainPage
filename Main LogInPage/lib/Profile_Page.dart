@@ -9,6 +9,8 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:scaffold_gradient_background/scaffold_gradient_background.dart';
+//import 'package:my_app/utils/helperfunctions.dart';
+import 'package:flutter/services.dart';
 
 
 Future<dynamic>? future_activity;
@@ -22,6 +24,7 @@ String? URL;
 String? NickName_Split;
 String? Profile_path = '1';
 String? introduce = '';
+String? myaddress;
 
 List<dynamic> schoolact = [] as List<dynamic>;
 List<dynamic> snamelist = [] as List<dynamic>;
@@ -173,8 +176,13 @@ class _Profile_Edit_PageState extends State<Profile_Edit_Page> {
                         ],
                       ),
                       onTap: () {
-
                         user_inf[1] = NFT[i][3];
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('${NFT[i][0]} NFT가 선택되었습니다'),
+                              duration: Duration(milliseconds: 1000),
+                            )
+                        );
                       },
 
                     ),
@@ -337,6 +345,18 @@ class _Profile_PageState extends State<Profile_Page>
   String? NickName = '';
 
   //late TabController _tabController;
+
+  String truncateString(String text, int front, int end) {
+    int size = front + end;
+
+    if (text.length > size) {
+      String finalString =
+          "${text.substring(0, front)}...${text.substring(text.length - end)}";
+      return finalString;
+    }
+
+    return text;
+  }
 
   void _add_Heart_Num(int i)
   {
@@ -540,10 +560,14 @@ class _Profile_PageState extends State<Profile_Page>
       NFT_In.add(In);
     }
 
+    var myaddress_list = await FirebaseFirestore.instance.collection('users').doc(URL).collection('MetaMask').get();
+    myaddress = myaddress_list.docs[0].data().values.elementAt(0);
+    print(myaddress);
 
 
     print(username);
     print(URL);
+    print(NFT_In.length);
     return extraact;
 
 
@@ -720,6 +744,34 @@ class _Profile_PageState extends State<Profile_Page>
             ),
           ),
         ),
+        Container(height: 5 * Factor_Height,),
+        Container(
+          child: Row(
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 18.0 * Factor_Width),
+                height: 18 * Factor_Height,
+                child: Text(
+                    truncateString(myaddress!, 6,4),
+                  style: TextStyle(
+                    fontFamily: 'Spoqa-Medium',
+                    fontSize: 14 * Factor_Height,
+                    color: Color(0xFF3C3C3C),
+                  ),
+                ),
+              ),
+              GestureDetector(child: const Icon(Icons.copy, size: 13,),
+                onTap: () { Clipboard.setData(ClipboardData(text: myaddress) );
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text('지갑 주소가 복사되었습니다')
+                    )
+                );
+                },
+              ),
+            ],
+          ),
+        ),
         Container(
           height: 24 * Factor_Height,
         ),
@@ -775,7 +827,7 @@ class _Profile_PageState extends State<Profile_Page>
           margin: EdgeInsets.symmetric(horizontal: 11.0 * Factor_Width),
           child: Row(
             children: [
-              Container(
+              NFT_In.length >= 1 ? Container(
                 child: ClipPolygon(
                   sides: 6,
                   borderRadius: 15.0, // Default 0.0 degrees
@@ -786,8 +838,8 @@ class _Profile_PageState extends State<Profile_Page>
                   child: Image.network(NFT[0][3],
                       height: 91 * Factor_Height, width: 91 * Factor_Height),
                 ),
-              ),
-              Container(
+              ) : Container(),
+              NFT_In.length >= 2 ? Container(
                 child: ClipPolygon(
                   sides: 6,
                   borderRadius: 15.0, // Default 0.0 degrees
@@ -798,8 +850,8 @@ class _Profile_PageState extends State<Profile_Page>
                   child: Image.network(NFT[1][3],
                       height: 91 * Factor_Height, width: 91 * Factor_Height),
                 ),
-              ),
-              Container(
+              ) : Container(),
+              NFT_In.length >= 3 ? Container(
                 child: ClipPolygon(
                   sides: 6,
                   borderRadius: 15.0, // Default 0.0 degrees
@@ -810,8 +862,8 @@ class _Profile_PageState extends State<Profile_Page>
                   child: Image.network(NFT[2][3],
                       height: 91 * Factor_Height, width: 91 * Factor_Height),
                 ),
-              ),
-              Container(
+              ) : Container(),
+              NFT_In.length >= 4 ? Container(
                 child: ClipPolygon(
                   sides: 6,
                   borderRadius: 15.0, // Default 0.0 degrees
@@ -822,7 +874,7 @@ class _Profile_PageState extends State<Profile_Page>
                   child: Image.network(NFT[3][3],
                       height: 91 * Factor_Height, width: 91 * Factor_Height),
                 ),
-              ),
+              ) : Container(),
             ],
           ),
         ),
@@ -1565,6 +1617,8 @@ class _Profile_PageState extends State<Profile_Page>
     final standardDeviceHeight = 812;
     final Factor_Height = deviceHeight / standardDeviceHeight;
 
+    print(NFT_In.length);
+
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -1585,7 +1639,9 @@ class _Profile_PageState extends State<Profile_Page>
                 ),
               ),
               Container(height: 8 * Factor_Height),
-              NFT_In.length.isOdd ? odd_Row_Container(NFT_In.length) : even_Row_Container(NFT_In.length),
+              NFT_In.length != 0 ?
+              (NFT_In.length.isOdd ? odd_Row_Container(NFT_In.length) : even_Row_Container(NFT_In.length)) : Text('NFT가 존재하지 않습니다.', style: TextStyle(fontFamily: 'Spoqa-Medium'),),
+              Container(height: 15*Factor_Height),
             ],
           ),
         ),

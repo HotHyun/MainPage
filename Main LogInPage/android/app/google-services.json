@@ -30,6 +30,13 @@
             {
               "client_id": "222616429546-l56d6fh719fafgdlpf6364a8vlkmpqg2.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "222616429546-2qului4fq9a80mj4khe0o1bu6irmohs0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.untitled2"
+              }
             }
           ]
         }
@@ -39,7 +46,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:222616429546:android:fe1090a8f9a71b5defc893",
         "android_client_info": {
-          "package_name": "com.ugrp.untitled2"
+          "package_name": "com.example.untitled2"
         }
       },
       "oauth_client": [
@@ -59,6 +66,13 @@
             {
               "client_id": "222616429546-l56d6fh719fafgdlpf6364a8vlkmpqg2.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "222616429546-2qului4fq9a80mj4khe0o1bu6irmohs0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.untitled2"
+              }
             }
           ]
         }

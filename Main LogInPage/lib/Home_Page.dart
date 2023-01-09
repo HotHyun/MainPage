@@ -174,12 +174,22 @@ List<int> LikenumList = [
 
 ];
 
+List<bool> ChecknumList = [
+
+
+];
+
 List<int> ParticipateList = [
 
 
 ];
 
 List<int> ExtraLikenumList = [
+
+
+];
+
+List<bool> ExtraChecknumList = [
 
 
 ];
@@ -203,12 +213,15 @@ setlikenum() async{ //likenum 정보 firestore에서 가져와서 업데이트�
 
     int templike = tempdata['Like_Num'];
     int temppart = tempdata['Participant'];
+    bool checklike = tempdata['is_True'];
 
     print(templike); //디버깅용
     print(temppart);
+    print(checklike);
 
     LikenumList.add(templike);
     ParticipateList.add(temppart);
+    ChecknumList.add(checklike);
 
   }
 
@@ -228,11 +241,14 @@ setextralikenum() async{ //likenum 정보 firestore에서 가져와서 업데이
 
     int templike = tempdata['Like_Num'];
     int temppart = tempdata['Participant'];
+    bool checklike = tempdata['is_True'];
 
     print(templike); //디버깅용
     print(temppart);
+    print(checklike);
 
     ExtraLikenumList.add(templike);
+    ExtraChecknumList.add(checklike);
 
   }
 
@@ -292,40 +308,40 @@ sethotlist() async{
 
 
 List<Heart_Like_Class> _Activity_Name = [
-  Heart_Like_Class('2022 학부생 연구프로그램', LikenumList[0], ParticipateList[0], false),
-  Heart_Like_Class('2022-2학기 MOOC 학점인정 신청', LikenumList[1], ParticipateList[1], false),
-  Heart_Like_Class('2022-2학기 포스텍 스마트 캠퍼스 리빙랩 활동단(1기)', LikenumList[2], ParticipateList[2], false),
-  Heart_Like_Class('달걀떨어뜨리기대회', LikenumList[3], ParticipateList[3],false),
-  Heart_Like_Class('2022년 POSTECH x CREATOR 모집', LikenumList[4], ParticipateList[4],false),
-  Heart_Like_Class('제 7회 "CCRP 공유 플랫폼" 공모전', LikenumList[5], ParticipateList[5], false),
-  Heart_Like_Class('2022-2학기 MOOC 이수비지원 신청', LikenumList[6], ParticipateList[6], false),
-  Heart_Like_Class('물리지 않는 물리 영상 공모전', LikenumList[7], ParticipateList[7], false),
-  Heart_Like_Class('MOOC 학점인정제 홍보영상 공모전', LikenumList[8], ParticipateList[8],false),
-  Heart_Like_Class('SF 창작 워크숍', LikenumList[9], ParticipateList[9], false),
+  Heart_Like_Class('2022 학부생 연구프로그램', LikenumList[0], ParticipateList[0], ChecknumList[0]),
+  Heart_Like_Class('2022-2학기 MOOC 학점인정 신청', LikenumList[1], ParticipateList[1], ChecknumList[1]),
+  Heart_Like_Class('2022-2학기 포스텍 스마트 캠퍼스 리빙랩 활동단(1기)', LikenumList[2], ParticipateList[2], ChecknumList[2]),
+  Heart_Like_Class('달걀떨어뜨리기대회', LikenumList[3], ParticipateList[3],ChecknumList[3]),
+  Heart_Like_Class('2022년 POSTECH x CREATOR 모집', LikenumList[4], ParticipateList[4],ChecknumList[4]),
+  Heart_Like_Class('제 7회 "CCRP 공유 플랫폼" 공모전', LikenumList[5], ParticipateList[5], ChecknumList[5]),
+  Heart_Like_Class('2022-2학기 MOOC 이수비지원 신청', LikenumList[6], ParticipateList[6], ChecknumList[6]),
+  Heart_Like_Class('물리지 않는 물리 영상 공모전', LikenumList[7], ParticipateList[7], ChecknumList[7]),
+  Heart_Like_Class('MOOC 학점인정제 홍보영상 공모전', LikenumList[8], ParticipateList[8],ChecknumList[8]),
+  Heart_Like_Class('SF 창작 워크숍', LikenumList[9], ParticipateList[9], ChecknumList[9]),
 ];
 
 List<DocumentReference> _Doc_Information = [ // PAMS 활동 에 대한 DocumentReference list
   FirebaseFirestore.instance.collection('Activity_Collection').doc('Jle6J0dFDc6IPw9dCn1E'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('dCyqppqeJS80oagNo1R7'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('thhOBHNfjyMtq7wi5bfI'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('cB5FvfgHufOyXAsSTEdR'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('T30KSWuZccUTRwlwf0ex'),
   FirebaseFirestore.instance.collection('Activity_Collection').doc('Jq3CDZ1suW3MzOqV9UFX'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('Tj8cT3tZR23AlO5MU3m3'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('T0fVgwi27SewNXJF8tvA'),
-  FirebaseFirestore.instance.collection('Activity_Collection').doc('h9boHngsnRf9CGbT6uZs'),
   FirebaseFirestore.instance.collection('Activity_Collection').doc('NTBLsFAeODa1If9zI56j'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('T0fVgwi27SewNXJF8tvA'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('T30KSWuZccUTRwlwf0ex'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('Tj8cT3tZR23AlO5MU3m3'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('cB5FvfgHufOyXAsSTEdR'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('dCyqppqeJS80oagNo1R7'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('h9boHngsnRf9CGbT6uZs'),
+  FirebaseFirestore.instance.collection('Activity_Collection').doc('thhOBHNfjyMtq7wi5bfI'),
 ];
 
 List<Heart_Like_Class> _Extra_Activity_Name = [
-  Heart_Like_Class('한동대 2023 Norithon 해커톤', ExtraLikenumList[0], 0, false),
-  Heart_Like_Class('PARCS 2023 StartUp Hackathon', ExtraLikenumList[1], 0, false),
-  Heart_Like_Class('포스텍 Mini-I-Corps', ExtraLikenumList[2], 0, false),
-  Heart_Like_Class('삼성휴먼테크논문대상', ExtraLikenumList[3], 0,false),
-  Heart_Like_Class('스트릿창업파이터', ExtraLikenumList[4], 0,false),
-  Heart_Like_Class('포스텍 에너지 캠페인', ExtraLikenumList[5], 0, false),
-  Heart_Like_Class('2022 전국 대학생 프로그래밍 경진대회', ExtraLikenumList[6], 0, false),
-  Heart_Like_Class('삼성대학생프로그래밍 경진대회', ExtraLikenumList[7], 0, false),
+  Heart_Like_Class('한동대 2023 Norithon 해커톤', ExtraLikenumList[0], 0, ExtraChecknumList[0]),
+  Heart_Like_Class('PARCS 2023 StartUp Hackathon', ExtraLikenumList[1], 0, ExtraChecknumList[1]),
+  Heart_Like_Class('포스텍 Mini-I-Corps', ExtraLikenumList[2], 0, ExtraChecknumList[2]),
+  Heart_Like_Class('삼성휴먼테크논문대상', ExtraLikenumList[3], 0,ExtraChecknumList[3]),
+  Heart_Like_Class('스트릿창업파이터', ExtraLikenumList[4], 0,ExtraChecknumList[4]),
+  Heart_Like_Class('포스텍 에너지 캠페인', ExtraLikenumList[5], 0, ExtraChecknumList[5]),
+  Heart_Like_Class('2022 전국 대학생 프로그래밍 경진대회', ExtraLikenumList[6], 0, ExtraChecknumList[6]),
+  Heart_Like_Class('삼성대학생프로그래밍 경진대회', ExtraLikenumList[7], 0, ExtraChecknumList[7]),
 ];
 
 List<DocumentReference> _Extra_Doc_Information = [ // 외부활동에 대한 DocumentReference list
@@ -513,7 +529,7 @@ class _Home_PageState extends State<Home_Page> {
       heart_like_class.Like_Num += 1;
       heart_like_class.is_True = true;
     }
-    FirebaseFirestore.instance.collection('extra_Activity_Collention').doc(doc.id).update( //firebase에 set해줌
+    FirebaseFirestore.instance.collection('extra_Activity_Collection').doc(doc.id).update( //firebase에 set해줌
         {
           'Like_Num' : heart_like_class.Like_Num,
           'is_True' : heart_like_class.is_True,
@@ -2440,7 +2456,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[0].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child: _Extra_Activity_Name[0].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[0], _Extra_Doc_Information[0]),
                                                   );
@@ -3012,7 +3028,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[4].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child: _Extra_Activity_Name[4].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[4], _Extra_Doc_Information[4]),
                                                   );
@@ -3021,7 +3037,7 @@ class _Home_PageState extends State<Home_Page> {
                                             Spacer(),
                                             Container(
                                               child: Text(
-                                                '${_Activity_Name[4].Like_Num}',
+                                                '${_Extra_Activity_Name[4].Like_Num}',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontFamily: 'Spoqa-Medium',

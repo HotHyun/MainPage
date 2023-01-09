@@ -29,7 +29,7 @@ class _FirstPageState extends State<FirstPage>
 
   Future<DeployedContract> loadContract() async{
     String abi = await rootBundle.loadString("assets/abi.json");
-    String contractAddress = "0xc798864eD7DCD722DF7AA40ec231600F30A81A7e";
+    String contractAddress = "0x804c8e9d36dc3954046260Db0047696281878Df6";
     final contract = DeployedContract(ContractAbi.fromJson(abi, "pamplnet"), EthereumAddress.fromHex(contractAddress));
     return contract;
   }

@@ -8,6 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 //import 'package:image/image.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Request_Information extends StatefulWidget {
 
@@ -17,15 +20,18 @@ class Request_Information extends StatefulWidget {
 
 class NFT_Information
 {
+  String? ID;
   String? Activity_Name;
   String? Activity_Period;
   String? My_Role;
   String? PAMS_Exist;
-  NFT_Information(this.Activity_Name, this.Activity_Period, this.My_Role, this.PAMS_Exist);
+  NFT_Information(this.ID, this.Activity_Name, this.Activity_Period, this.My_Role, this.PAMS_Exist);
 }
 
 class _Request_InformationState extends State<Request_Information> {
 
+
+  var _NFT_NextController0 = TextEditingController();
   var _NFT_NextController1 = TextEditingController();
   var _NFT_NextController2 = TextEditingController();
   var _NFT_NextController3 = TextEditingController();
@@ -43,9 +49,12 @@ class _Request_InformationState extends State<Request_Information> {
       maxHeight: 1080,
       maxWidth: 1080,
     );
-    setState(() {
-      file = imageFile;
-    });
+    if(this.mounted)
+      {
+        setState(() {
+          file = imageFile;
+        });
+      }
   }
 
   captureImageWithCamera() async {
@@ -55,14 +64,18 @@ class _Request_InformationState extends State<Request_Information> {
       maxHeight: 1080,
       maxWidth: 1080,
     );
-    setState(() {
-      file = imageFile;
-    });
+    if(this.mounted)
+      {
+        setState(() {
+          file = imageFile;
+        });
+      }
   }
 
   @override
   void dispose()
   {
+    _NFT_NextController0.dispose();
     _NFT_NextController1.dispose();
     _NFT_NextController2.dispose();
     _NFT_NextController3.dispose();
@@ -70,8 +83,12 @@ class _Request_InformationState extends State<Request_Information> {
     super.dispose();
   }
 
+
   Future _add_NFT_Information(NFT_Information information, BuildContext context) async{
     try{
+
+      //final FirebaseStorage storage = FirebaseStorage.instance;
+
       final firebaseStorageRef = FirebaseStorage.instance.ref().child('NFT_Collection').child('${DateTime.now().millisecondsSinceEpoch}.png');
 
       final uploadTask = firebaseStorageRef.putFile(File(file!.path), SettableMetadata(contentType: 'image/png'));
@@ -79,23 +96,29 @@ class _Request_InformationState extends State<Request_Information> {
       await uploadTask.whenComplete(() => null);
 
       final downloadUrl = await firebaseStorageRef.getDownloadURL();
-      setState(() {
-        FirebaseFirestore.instance.collection('NFT_Information').add(
-          {
-            'PhotoUrl': downloadUrl,
-            'Activity_Name': information.Activity_Name,
-            'Activity_Period': information.Activity_Period,
-            'My_Role': information.My_Role,
-            'PAMS_Exist': information.PAMS_Exist,
-          },
-        );
-        _NFT_NextController1.text = '';
-        _NFT_NextController2.text = '';
-        _NFT_NextController3.text = '';
-        _NFT_NextController4.text = '';
-        //print("!111111111111111111111111111");
-      });
+      if(this.mounted)
+        {
+          setState(() {
+            FirebaseFirestore.instance.collection('NFT_Information').add(
+              {
+                'PhotoUrl': downloadUrl,
+                'ID' : information.ID,
+                'Activity_Name': information.Activity_Name,
+                'Activity_Period': information.Activity_Period,
+                'My_Role': information.My_Role,
+                'PAMS_Exist': information.PAMS_Exist,
+              },
+            );
+            _NFT_NextController0.text = '';
+            _NFT_NextController1.text = '';
+            _NFT_NextController2.text = '';
+            _NFT_NextController3.text = '';
+            _NFT_NextController4.text = '';
+            print("!111111111111111111111111111");
+          });
+        }
     } catch(e){print(e);}
+    return 1;
   }
 
   takeImage(mContext){
@@ -284,6 +307,50 @@ class _Request_InformationState extends State<Request_Information> {
                 height: 25 * Factor_Height,
                 margin: EdgeInsets.symmetric(horizontal: 26.0 * Factor_Width),
                 child: Text(
+                  '학번',
+                  style: TextStyle(
+                    fontSize: 20 * Factor_Height,
+                    fontFamily: 'Spoqa-Bold',
+                    color: Color(0xFF3C3C3C),
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              Container(
+                height: 22 * Factor_Height,
+              ),
+              Container(
+                height: 25 * Factor_Height,
+                margin: EdgeInsets.symmetric(horizontal: 28.0 * Factor_Width),
+                child: TextField(
+                  controller: _NFT_NextController0,
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFCFCFCF),
+                      ),
+                    ),
+                    hintStyle: TextStyle(
+                      fontSize: 14.4 * Factor_Width,
+                      fontFamily: "Spoqa-Medium",
+                      color: Color(0xFF818181),
+                    ),
+                    hintText: "20230000",
+                  ),
+                  style: TextStyle(
+                    fontSize: 14.4 * Factor_Width,
+                    fontFamily: "Spoqa-Medium",
+                    color: Color(0xFF3C3C3C),
+                  ),
+                ),
+              ),
+              Container(
+                height: 43 * Factor_Height,
+              ),
+              Container(
+                height: 25 * Factor_Height,
+                margin: EdgeInsets.symmetric(horizontal: 26.0 * Factor_Width),
+                child: Text(
               '활동명',
               style: TextStyle(
                 fontSize: 20 * Factor_Height,
@@ -465,14 +532,15 @@ class _Request_InformationState extends State<Request_Information> {
                   onTap:()
                   {
                     _add_NFT_Information(NFT_Information(
+                      _NFT_NextController0.text,
                       _NFT_NextController1.text,
                       _NFT_NextController2.text,
                       _NFT_NextController3.text,
                       _NFT_NextController4.text,
                     ), context);
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder:
+                      CupertinoPageRoute(builder:
                           (context) => NFT_Reservation()),
                     );
                   },

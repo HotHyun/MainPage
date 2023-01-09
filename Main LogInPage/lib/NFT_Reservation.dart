@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Main_HomePage.dart';
+import 'package:flutter/cupertino.dart';
 
 class NFT_Reservation extends StatefulWidget {
   @override
@@ -94,7 +95,7 @@ class _NFT_ReservationState extends State<NFT_Reservation> {
                 children: [
                   Expanded(
                     child: Text(
-                      '제작이 완료될 시 푸쉬 알림으로',
+                      '구글 폼을 작성하지 않으신 분들은 뒤로가기',
                       style: TextStyle(
                         fontSize: 18 * Factor_Height,
                         fontFamily: 'Spoqa-Medium',
@@ -105,7 +106,7 @@ class _NFT_ReservationState extends State<NFT_Reservation> {
                   ),
                   Expanded(
                     child: Text(
-                      '전달해드리겠습니다!',
+                      '버튼을 눌러 꼭 작성해주시길 바랍니다 !',
                       style: TextStyle(
                         fontSize: 18 * Factor_Height,
                         fontFamily: 'Spoqa-Medium',
@@ -127,9 +128,9 @@ class _NFT_ReservationState extends State<NFT_Reservation> {
                 child: GestureDetector(
                   onTap:()
                   {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder:
+                      CupertinoPageRoute(builder:
                           (context) => Main_HomePage()),
                     );
                   },

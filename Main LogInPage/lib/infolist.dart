@@ -16,6 +16,9 @@ List<Map<String, dynamic>> extraactlist = []; // 외부 활동 리스트
 
 makeactlist() async {
   allactlist.clear();
+  nowactlist.clear();
+  endedactlist.clear();
+  availableactlist.clear();
   extraactlist.clear();
 
   var tempact = await FirebaseFirestore.instance
@@ -93,6 +96,7 @@ class infolisttabbar extends StatefulWidget {
 class _infolisttabbarState extends State<infolisttabbar>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  int i = 0;
 
   @override
   void initState() {
@@ -156,49 +160,54 @@ class _infolisttabbarState extends State<infolisttabbar>
                         Column(
                           // 신청 가능한 활동 리스트
                           children: [
+                            Container(height: 8*Factor_Height),
 
                             Container(
-                              height: 15 * Factor_Height,
+                              height: 30 * Factor_Height,
                               child: Text(
                                 '신청 가능한 활동',
                                 style: TextStyle(
-                                  fontSize: 15 * Factor_Height,
+                                  fontSize: 18 * Factor_Height,
                                   fontFamily: 'Spoqa-Bold',
                                   color: Color(0xFF807D7D),
                                 ),
-                                textAlign: TextAlign.left,
+                                textAlign: TextAlign.center,
                               ),
                             ),
 
                             for (int i = 0; i < availableactlist.length; i++)
                               Act(1, i),
 
+                            Container(height: 8*Factor_Height),
+
                             Container(
-                              height: 15 * Factor_Height,
+                              height: 30 * Factor_Height,
                               child: Text(
                                 '운영 중인 활동',
                                 style: TextStyle(
-                                  fontSize: 15 * Factor_Height,
+                                  fontSize: 18 * Factor_Height,
                                   fontFamily: 'Spoqa-Bold',
                                   color: Color(0xFF807D7D),
                                 ),
-                                textAlign: TextAlign.left,
+                                textAlign: TextAlign.center,
                               ),
                             ),
 
                             for (int i = 0; i < endedactlist.length; i++)
                               Act(3, i),
 
+                            Container(height: 8*Factor_Height),
+
                             Container(
-                              height: 15 * Factor_Height,
+                              height: 30 * Factor_Height,
                               child: Text(
                                 '종료된 활동',
                                 style: TextStyle(
-                                  fontSize: 15 * Factor_Height,
+                                  fontSize: 18 * Factor_Height,
                                   fontFamily: 'Spoqa-Bold',
                                   color: Color(0xFF807D7D),
                                 ),
-                                textAlign: TextAlign.left,
+                                textAlign: TextAlign.center,
                               ),
                             ),
 
@@ -358,7 +367,6 @@ class Act extends StatelessWidget {
     image_path = '';
     PAM = 0;
 
-    return; //생성만 하고 widget build 하지 않고 return
   }
 
   Act.copy(Act tempact) {
@@ -425,8 +433,6 @@ class Act extends StatelessWidget {
       image_path = endedactlist[idx]['image_path'];
       PAM = endedactlist[idx]['pam'];
     }
-
-
   }
 
   @override
@@ -650,7 +656,7 @@ class extraAct extends StatelessWidget {
                       ),
                       Container(height: 5 * Factor_Height),
                       Container(
-                        height: 15 * Factor_Height,
+                        height: 19 * Factor_Height,
                         child: Text(
                           activity_name!,
                           style: TextStyle(
@@ -663,7 +669,7 @@ class extraAct extends StatelessWidget {
                       ),
                       Container(height: 5 * Factor_Height),
                       Container(
-                        height: 13 * Factor_Height,
+                        height: 16 * Factor_Height,
                         child: Text(
                           '기간: 상세 정보 확인',
                           style: TextStyle(

@@ -13,6 +13,11 @@ import 'package:web3dart/web3dart.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart' as fire;
 
+import 'package:bip39/bip39.dart' as bip39;
+import 'package:ed25519_hd_key/ed25519_hd_key.dart';
+import 'package:hex/hex.dart';
+
+
 
 import 'package:flutter/services.dart';
 
@@ -34,13 +39,36 @@ class _walletState extends State<wallet> {
 
   // 클라이언트 생성하고, 스마트컨트랙 연결하고 이것저것 기본 과정
 
+  var mnemonic;
+  var privateKey;
+  var publicKey;
+
+  generateNewAddress() async{
+    //generate Address
+    mnemonic = bip39.generateMnemonic();
+
+    //generate privateKey
+    final seed = bip39.mnemonicToSeed(mnemonic);
+    final master = await ED25519_HD_KEY.getMasterKeyFromSeed(seed);
+    privateKey = HEX.encode(master.key);
+
+    //generate publicKey
+    final private = EthPrivateKey.fromHex(privateKey);
+    publicKey = await private.extractAddress();
+
+    print('mnemonic: ${mnemonic}');
+    print('privateKey: ${privateKey}');
+    print('publicKey: ${publicKey}');
+  }
+
+
   late http.Client httpClient = http.Client();
   late Web3Client ethClient = Web3Client("https://goerli.infura.io/v3/ba7427e86e274343b87c23ab90db57cf", httpClient);
   var myaddress;
 
   Future<DeployedContract> loadContract() async{
     String abi = await rootBundle.loadString("assets/abi.json");
-    String contractAddress = "0xc798864eD7DCD722DF7AA40ec231600F30A81A7e";
+    String contractAddress = "0x804c8e9d36dc3954046260Db0047696281878Df6";
     final contract = DeployedContract(ContractAbi.fromJson(abi, "pamplnet"), EthereumAddress.fromHex(contractAddress));
     return contract;
   }
@@ -434,12 +462,25 @@ class _walletState extends State<wallet> {
                 // MetaMask 지갑이 없다면? 버튼
                 height: 53 * Factor_Height,
                 child: GestureDetector(
-                  onTap: () {
-                    /*Navigator.push(
+                  onTap: () async{
+                    await generateNewAddress();
+                    await storage.write(
+                      key: "MetaMask",
+                      value: "ID " + publicKey.toString(),
+                    );
+                    setState(() {
+                      fire.FirebaseFirestore.instance.collection('users').doc(ID_2000!.split(" ")[1]).collection('MetaMask').doc('ID').set(
+                          {'MetaMask_ID' : publicKey.toString()}
+                      );
+                    });
+
+                    Navigator.push(
                         context,
                         CupertinoPageRoute(
                             builder: (context) =>
-                                whoareyou())); // metamask 웹 페이지로 넘어가도록 추후 구현*/
+                                whoareyou()));
+                    // metamask 웹 페이지로 넘어가도록 추후 구현
+
                   },
                   child: Container(
                     decoration: BoxDecoration(

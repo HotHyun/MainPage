@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:untitled2/NFT_Reservation.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'Request_Information.dart';
 
 class Request_Page extends StatefulWidget {
@@ -104,12 +106,13 @@ class _Request_PageState extends State<Request_Page> {
               child: Container(
                 width: 300 * Factor_Width,
                 child: GestureDetector(
-                  onTap:()
+                  onTap:() async
                   {
+                    await launchUrlString('https://docs.google.com/forms/d/e/1FAIpQLSc87PzVMqWI2EidnX1OTsxJlufjMtfcQYMtL60LUOHxBkFF8g/viewform?usp=sf_link');
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder:
-                          (context) => Request_Information()),
+                          (context) => NFT_Reservation()),
                     );
                   },
                   child: Stack(

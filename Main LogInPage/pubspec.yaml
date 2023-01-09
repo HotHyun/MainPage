@@ -44,7 +44,7 @@ dependencies:
   slider_button: ^2.0.0
   firebase_storage: ^11.0.5
   firebase_core: ^2.2.0
-  firebase_auth: ^4.1.2
+  firebase_auth: ^4.2.5
   flutter_neumorphic: ^3.2.0
   polygon_clipper: ^1.0.2
   http: ^0.13.5
@@ -53,6 +53,13 @@ dependencies:
   scaffold_gradient_background: ^1.0.3+1
   firebase_messaging: ^14.2.1
   get: ^4.6.5
+  bip39: ^1.0.6
+  ed25519_hd_key: ^2.2.0
+  hex: ^0.2.0
+  firebase_database: ^10.0.9
+  google_sign_in: ^5.4.2
+
+
 
 dev_dependencies:
   flutter_test:
