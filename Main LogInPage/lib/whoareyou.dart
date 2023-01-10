@@ -23,10 +23,12 @@ class _whoareyouState extends State<whoareyou> {
 
   String? userInfo = '';
   String? User_Name = '';
+  String? ID = '';
 
   void _add_Information(user_Information information) async
   {
     userInfo = await storage.read(key: "login");
+    ID = await storage.read(key: "MetaMask");
     User_Name = await storage.read(key: "NickName");
     await storage.write(
       key: "NickName",
@@ -37,6 +39,11 @@ class _whoareyouState extends State<whoareyou> {
           {'Nickname' : information.Nickname}
       );
       NicknameController.text = '';
+    });
+    setState(() {
+      FirebaseFirestore.instance.collection('users').doc(userInfo!.split(" ")[1]).collection('MetaMask').doc('ID').set(
+          {'MetaMask_ID' : ID!.split(" ")[1]}
+      );
     });
   }
 
