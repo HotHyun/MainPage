@@ -85,6 +85,14 @@ class _Search_PageState extends State<Search_Page> {
         print(_checking.data());
         if(_checking.data() != null)
           {
+            if(_NextController1.text == 'all')
+            {
+              List<String> Personal = [ProfileData.docs[i].data().values.elementAt(2), ProfileData.docs[i].data().values.elementAt(3)
+                , ProfileData.docs[i].id, Profile_Act.docs[0].data().values.elementAt(0), Profile_Act.docs[1].data().values.elementAt(0), Profile_Act.docs[2].data().values.elementAt(0)];
+              Profile_Information.add(Personal);
+              print(Profile_Information);
+              continue;
+            }
             if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[0]))
             {
               if(_NextController1.text.contains(ProfileData.docs[i].data().values.elementAt(2)[1]))
@@ -142,25 +150,52 @@ class _Search_PageState extends State<Search_Page> {
           ),
           Container(height: 17 * Factor_Height),
           Container(
-            height: 42 * Factor_Height,
+            height: 110 * Factor_Height,
             child: Column(
               children: [
-                Expanded(
+                Container(
+                  height: 20 * Factor_Height,
                   child: Text(
                     '다른 사람들의 프로필을 구경해보세요 !!',
                     style: TextStyle(
-                      fontSize: 15 * Factor_Height,
+                      fontSize: 13 * Factor_Height,
                       fontFamily: 'Spoqa-Medium',
                       color: Color(0xFF2C2C2C),
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                Expanded(
+                Container(
+                  height: 20 * Factor_Height,
                   child: Text(
                     '검색 버튼에 조회하고 싶은 사람의 이름을 적어보세요 !!',
                     style: TextStyle(
-                      fontSize: 15 * Factor_Height,
+                      fontSize: 13 * Factor_Height,
+                      fontFamily: 'Spoqa-Medium',
+                      color: Color(0xFF2C2C2C),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Container(height: 20 * Factor_Height,),
+                Container(
+                  height: 20 * Factor_Height,
+                  child: Text(
+                    '검색창에 all을 입력하시면 앱을 사용하는',
+                    style: TextStyle(
+                      fontSize: 13 * Factor_Height,
+                      fontFamily: 'Spoqa-Medium',
+                      color: Color(0xFF2C2C2C),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Container(
+                  height: 20 * Factor_Height,
+                  child: Text(
+                    '모든 유저의 정보가 나오니 참고하시길 바랍니다 !!',
+                    style: TextStyle(
+                      fontSize: 13 * Factor_Height,
                       fontFamily: 'Spoqa-Medium',
                       color: Color(0xFF2C2C2C),
                     ),
