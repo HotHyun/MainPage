@@ -3299,7 +3299,7 @@ class _Home_PageState extends State<Home_Page> {
                                                       height: 15 * Factor_Height,
                                                       child:Image.asset('assets/heart (2).png'),
                                                     ),
-                                                    onTap: () => _add_extra_Heart_Num(_Activity_Name[6], _Doc_Information[6]),
+                                                    onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[6], _Extra_Doc_Information[6]),
                                                   );
                                                 }
                                             ),
