@@ -23,6 +23,8 @@ class FirstPage extends StatefulWidget{
 
 class _FirstPageState extends State<FirstPage>
 {
+  int i = 0;
+
   late http.Client httpClient = http.Client();
   late Web3Client ethClient = Web3Client("https://goerli.infura.io/v3/ba7427e86e274343b87c23ab90db57cf", httpClient);
   //var myaddress;
@@ -46,7 +48,7 @@ class _FirstPageState extends State<FirstPage>
   }
   var IdList, URIList;
 
-  Future<dynamic> getjson(dynamic jsonURI, int i) async{
+  Future<dynamic> getjson(dynamic jsonURI, String userinfo, int i) async{
     var uriResponse = await http.get(
       Uri.parse(jsonURI),
     );
@@ -54,6 +56,11 @@ class _FirstPageState extends State<FirstPage>
     var jsonBody = utf8.decode(uriResponse.bodyBytes);
     Map<String, dynamic> json = jsonDecode(jsonBody);
     var attr = json['attributes'];
+
+    var NFTList = await fire.FirebaseFirestore.instance.collection('users').doc(userinfo).collection('NFT').get();
+    Map<String, dynamic> temp = NFTList.docs[i].data();
+    dynamic like_num = temp['like_num'];
+    dynamic is_Checked = temp['is_Checked'];
 
     setState(() {
       fire.FirebaseFirestore.instance.collection('users').doc(userInfo!.split(" ")[1]).collection('NFT').doc('NFT${i}').set(
@@ -67,8 +74,9 @@ class _FirstPageState extends State<FirstPage>
             'day_end' : attr[3]['value'].toString(),
             'host' : attr[4]['value'].toString(),
             'prize' : attr[5]['value'].toString(),
-            'like_num' : 0,
-            'id' : IdList[i].toString()
+            'like_num' : like_num,
+            'id' : IdList[i].toString(),
+            'is_Checked' : is_Checked
           }
       );
     });
@@ -126,7 +134,7 @@ class _FirstPageState extends State<FirstPage>
     for(int i = 0; i < URIList.length; i++)
     {
       print("차은성 ㅈㄴ 바보");
-      await getjson(URIList[i], i);
+      await getjson(URIList[i], userInfo!.split(" ")[1], i);
       print(URIList[i]); // attr 이라는 변수에 저장을 한다며
       print(IdList[i]);
     }

@@ -154,11 +154,11 @@ class _letsgoState extends State<letsgo>
                         value: "is_Finish " + "true",
                       );
 
-                      Navigator.push(
+                      Navigator.pushAndRemoveUntil(
                        context,
                         CupertinoPageRoute(builder:
                            (context) => MyApp()),
-                      );
+                          (route)=>false);
                     },
                     child: Stack(
                       children: [

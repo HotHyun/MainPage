@@ -360,20 +360,11 @@ class _Profile_PageState extends State<Profile_Page>
 
   void _add_Heart_Num(int i)
   {
-    if(NFT[i][4] == true)
-    {
-      NFT[i][1] -= 1;
-      NFT[i][4] = false;
-    }
-    else
-    {
-      NFT[i][1] += 1;
-      NFT[i][4] = true;
-    }
+    NFT[i][1] += 1;
     FirebaseFirestore.instance.collection('users').doc(URL).collection('NFT').doc('NFT${i}').update(
         {
           'like_num' : NFT[i][1],
-          'is_Checked' : NFT[i][4],
+          //'is_Checked' : NFT[i][4],
         }
     );
   }
@@ -399,6 +390,13 @@ class _Profile_PageState extends State<Profile_Page>
     print(widget.Nick);
     print(widget.path);
     print(widget.introduce);
+
+    var user_Inf_list = await FirebaseFirestore.instance.collection('users').doc(URL).collection('Profile').get();
+
+    for(int i = 0; i < user_Inf_list.docs.length; i++)
+    {
+      user_inf.add(user_Inf_list.docs[i].data().values.elementAt(0));
+    }
 
     if(widget.ID_Prof != null && widget.Nick != null && widget.path != null && widget.introduce != null)
     {
@@ -460,13 +458,6 @@ class _Profile_PageState extends State<Profile_Page>
       default:
         major_image = 'assets/postech_mej.png';
     }
-
-    var user_Inf_list = await FirebaseFirestore.instance.collection('users').doc(URL).collection('Profile').get();
-
-    for(int i = 0; i < user_Inf_list.docs.length; i++)
-      {
-        user_inf.add(user_Inf_list.docs[i].data().values.elementAt(0));
-      }
 
     var schoolactlist = await FirebaseFirestore.instance.collection('users').doc(URL).collection('schoolAct').get();
 
@@ -605,20 +596,32 @@ class _Profile_PageState extends State<Profile_Page>
     print(username);
     print(major);
 
+    int refreshnum = 0;
+
     return Scaffold(
       body: FutureBuilder<dynamic>(
           future: future_activity,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if(snapshot.hasData)
             {
-              return ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  _Build_First(),
-                  MajorandID(),
-                  Career(),
-                  NFT_Page(),
-                ],
+              return RefreshIndicator(
+                onRefresh: () async {
+                  refreshnum += 1;
+                  setState(() {
+
+                  });
+                },
+                color: Color(0xFFCD0051),
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  children: <Widget>[
+                    _Build_First(),
+                    MajorandID(),
+                    Career(),
+                    NFT_Page(),
+                  ],
+                ),
               );
             }
             else if(snapshot.hasData == false)

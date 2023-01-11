@@ -128,7 +128,8 @@ class _walletState extends State<wallet> {
             'host' : attr[4]['value'].toString(),
             'prize' : attr[5]['value'].toString(),
             'like_num' : 0,
-            'id' : IdList[i].toString()
+            'id' : IdList[i].toString(),
+            'is_Checked' : false
           }
       );
     });

@@ -8,6 +8,7 @@ import 'actinfo.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 Future<dynamic>? future_likenum;
 
@@ -499,40 +500,22 @@ class _Home_PageState extends State<Home_Page> {
 
   void _add_Heart_Num(Heart_Like_Class heart_like_class, DocumentReference doc)
   {
-    if(heart_like_class.is_True == true)
-    {
-      heart_like_class.Like_Num -= 1;
-      heart_like_class.is_True = false;
-    }
-    else
-    {
-      heart_like_class.Like_Num += 1;
-      heart_like_class.is_True = true;
-    }
+    heart_like_class.Like_Num += 1;
     FirebaseFirestore.instance.collection('Activity_Collection').doc(doc.id).update( //firebase에 set해줌
         {
           'Like_Num' : heart_like_class.Like_Num,
-          'is_True' : heart_like_class.is_True,
+          //'is_True' : heart_like_class.is_True,
         }
     );
   }
 
   void _add_extra_Heart_Num(Heart_Like_Class heart_like_class, DocumentReference doc)
   {
-    if(heart_like_class.is_True == true)
-    {
-      heart_like_class.Like_Num -= 1;
-      heart_like_class.is_True = false;
-    }
-    else
-    {
-      heart_like_class.Like_Num += 1;
-      heart_like_class.is_True = true;
-    }
+    heart_like_class.Like_Num += 1;
     FirebaseFirestore.instance.collection('extra_Activity_Collection').doc(doc.id).update( //firebase에 set해줌
         {
           'Like_Num' : heart_like_class.Like_Num,
-          'is_True' : heart_like_class.is_True,
+          //'is_True' : heart_like_class.is_True,
         }
     );
   }
@@ -961,7 +944,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[0].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child: Image.asset('assets/heart (2).png')
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[0], _Doc_Information[0]),
                                                   );
@@ -1104,7 +1087,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[1].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child: Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[1], _Doc_Information[1]),
                                                   );
@@ -1247,7 +1230,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[2].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child: Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[2], _Doc_Information[2]),
                                                   );
@@ -1390,7 +1373,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[3].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child: Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[3], _Doc_Information[3]),
                                                   );
@@ -1533,7 +1516,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[4].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child: Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[4], _Doc_Information[4]),
                                                   );
@@ -1676,7 +1659,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[5].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[5], _Doc_Information[5]),
                                                   );
@@ -1819,7 +1802,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[6].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[6], _Doc_Information[6]),
                                                   );
@@ -1962,7 +1945,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[7].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[7], _Doc_Information[7]),
                                                   );
@@ -2105,7 +2088,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[8].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[8], _Doc_Information[8]),
                                                   );
@@ -2248,7 +2231,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Activity_Name[9].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_Heart_Num(_Activity_Name[9], _Doc_Information[9]),
                                                   );
@@ -2456,7 +2439,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Extra_Activity_Name[0].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[0], _Extra_Doc_Information[0]),
                                                   );
@@ -2599,7 +2582,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Extra_Activity_Name[1].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[1], _Extra_Doc_Information[1]),
                                                   );
@@ -2742,7 +2725,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Extra_Activity_Name[2].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[2], _Extra_Doc_Information[2]),
                                                   );
@@ -2885,7 +2868,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Extra_Activity_Name[3].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[3], _Extra_Doc_Information[3]),
                                                   );
@@ -3028,7 +3011,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Extra_Activity_Name[4].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[4], _Extra_Doc_Information[4]),
                                                   );
@@ -3171,7 +3154,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Extra_Activity_Name[5].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[5], _Extra_Doc_Information[5]),
                                                   );
@@ -3314,7 +3297,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Extra_Activity_Name[6].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Activity_Name[6], _Doc_Information[6]),
                                                   );
@@ -3457,7 +3440,7 @@ class _Home_PageState extends State<Home_Page> {
                                                     child: Container(
                                                       width: 16 * Factor_Height,
                                                       height: 15 * Factor_Height,
-                                                      child: _Extra_Activity_Name[7].is_True ? Image.asset('assets/heart (2).png') : Image.asset('assets/heart (1).png'),
+                                                      child:Image.asset('assets/heart (2).png'),
                                                     ),
                                                     onTap: () => _add_extra_Heart_Num(_Extra_Activity_Name[7], _Extra_Doc_Information[7]),
                                                   );

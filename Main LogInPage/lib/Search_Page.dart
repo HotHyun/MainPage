@@ -60,6 +60,8 @@ List<List<String>> Profile_Information = [];
 
 class _Search_PageState extends State<Search_Page> {
 
+  int k = 0;
+
   var _NextController1 = TextEditingController();
 
   @override
@@ -71,19 +73,20 @@ class _Search_PageState extends State<Search_Page> {
 
   getProfileData() async
   {
-    Profile_Information.clear();
-
-    var ProfileData = await FirebaseFirestore.instance.collection('users').get();
-
-    for (int i = 0; i < ProfileData.docs.length; i++)
+    if(k == 0)
       {
-        var light = await FirebaseFirestore.instance.collection('users').doc(ProfileData.docs[i].id);
-        var Profile_Act = await light.collection('Profile').get();
+        k++;
+        var ProfileData = await FirebaseFirestore.instance.collection('users').get();
 
-        var _checking = await light.collection('MetaMask').doc('ID').get();
+        for (int i = 0; i < ProfileData.docs.length; i++)
+        {
+          var light = await FirebaseFirestore.instance.collection('users').doc(ProfileData.docs[i].id);
+          var Profile_Act = await light.collection('Profile').get();
 
-        print(_checking.data());
-        if(_checking.data() != null)
+          var _checking = await light.collection('MetaMask').doc('ID').get();
+
+          print(_checking.data());
+          if(_checking.data() != null)
           {
             if(_NextController1.text == 'all')
             {
@@ -126,7 +129,9 @@ class _Search_PageState extends State<Search_Page> {
               continue;
             }
           }
-          }
+        }
+        k--;
+      }
     return 1;
   }
 
@@ -212,6 +217,8 @@ class _Search_PageState extends State<Search_Page> {
 
   Widget _Update()
   {
+    Profile_Information.clear();
+
     return FutureBuilder<dynamic>(
         future: getProfileData(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -262,6 +269,7 @@ class _Search_PageState extends State<Search_Page> {
 
   @override
   Widget build(BuildContext context) {
+
     final deviceWidth = MediaQuery.of(context).size.width;
     final standardDeviceWidth = 375;
     final Factor_Width = deviceWidth / standardDeviceWidth;
